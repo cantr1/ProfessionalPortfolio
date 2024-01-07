@@ -7,7 +7,7 @@ Welcome to my Professional Portfolio! This repository serves as a comprehensive 
 
 **Tools & Methods:**
 
-- **Python:** Utilized Python for data wrangling, analysis, and machine learning, with a focus on the pandas, NumPy, Matplotlib, and Seaborn libraries for data manipulation and visualization.
+- **Python:** Utilized Python for data wrangling, analysis, and machine learning, with a focus on the pandas, Matplotlib, and SciKit-Learn libraries for data manipulation and visualization.
 - **Feature Engineering:** Crafted new features that capture the complexities of the real estate market, such as proximity to the ocean and household size.
 - **Statistical Analysis:** Calculated correlation coefficients to identify strong predictors of home values, with special attention to median income and geographical location.
 - **Machine Learning Modeling:** Created a RandomForestRegressor model, optimized with grid search and evaluated using k-fold cross-validation to ensure high accuracy and generalizability.
@@ -39,6 +39,5 @@ Welcome to my Professional Portfolio! This repository serves as a comprehensive 
 - **Python Development:** Utilized Python's rich ecosystem to build the application, with an emphasis on readability and functionality.
 - **User Experience Design:** Crafted a user-friendly interface to accommodate technicians with varying levels of expertise.
 - **OOP Design:** Employed Object-Oriented Programming principles to ensure the system's scalability and maintainability.
-- **Documentation Support:** Provided tailored assistance for non-native English speakers to create detailed repair notes.
 - **Logging Mechanism:** Implemented a robust logging feature for a comprehensive repair history documentation.
 - **Search Capabilities:** Integrated query functionality for efficient retrieval of logs using server serial numbers.
