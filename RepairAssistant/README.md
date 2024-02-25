@@ -1,4 +1,8 @@
-### Automated Repair Logging Assistant
+### Repair Logging Assistant for Quanta Nashville
+
+<img src="Screenshots/Screenshot_2024-02-25_06-28-57.png" height="380">
+<img src="Screenshots/Screenshot_2024-02-25_06-29-55.png" height="450">
+
 
 **Objective:** Develop a Python-based tool to aid non-native English speakers in creating systematic and informative repair logs, simplifying the technical documentation process.
 
