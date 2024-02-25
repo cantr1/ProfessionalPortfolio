@@ -50,3 +50,7 @@ class FailureMethods:
         else:
             print("No info found for this failure code.")
             return None
+        
+    def get_repair_info(self, failure):
+        repair_info = self.failure_dict[failure]
+        return repair_info

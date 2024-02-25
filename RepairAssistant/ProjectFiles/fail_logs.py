@@ -33,6 +33,7 @@ class RepairLog:
             else:
                 # Create a new list for this user with the repair entry
                 self.repair_log[user] = [repair_entry]
+            return True
 
     def clear_logs(self):
         """
