@@ -12,6 +12,7 @@ This repository serves as a showcase of my best projects. Here, you'll find an o
 | Password Manager  | A python project aimed at creating a password management system inline with standard security practices.   |
 | Bash Scanner  | A project in bash scripting designed to imitate the popular nmap tool for penetration testing.   |
 | Pentest Workflow  | A Jupyter Notebook to show a typical workflow in penetration testing.   |
+| RemoteVM  | A project showing competency with virtual machines and networking between devices.   |
 
 ---
 ## Projects 
