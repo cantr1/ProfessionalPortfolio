@@ -4,7 +4,7 @@
 <img src="Screenshots/Screenshot_2024-02-25_06-29-55.png" height="450">
 
 
-**Objective:** Develop a Python-based tool to aid non-native English speakers in creating systematic and informative repair logs, simplifying the technical documentation process.
+**Objective:** Develop a Python-based tool to aid new technicians in creating systematic and informative repair logs, simplifying the technical documentation process.
 
 **Tools & Methods:**
 
@@ -17,6 +17,6 @@
 
 **Outcomes & Benefits:**
 
-- Delivered an effective solution to streamline the repair logging process, significantly aiding non-native English-speaking technicians.
+- Delivered an effective solution to streamline the repair logging process, significantly aiding new technicians.
 - The assistant's design enhances the accessibility of technical documentation, ensuring that repair notes are both systematic and informative.
 - The OOP foundation of the project ensures that it can be easily expanded and adapted to future needs and additional functionalities.
