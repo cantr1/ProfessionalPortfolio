@@ -11,7 +11,6 @@
 - **Python Development:** Utilized Python's rich ecosystem to build the application, with an emphasis on readability and functionality.
 - **User Experience Design:** Crafted a user-friendly interface to accommodate technicians with varying levels of expertise.
 - **OOP Design:** Employed Object-Oriented Programming principles to ensure the system's scalability and maintainability.
-- **Documentation Support:** Provided tailored assistance for non-native English speakers to create detailed repair notes.
 - **Logging Mechanism:** Implemented a robust logging feature for a comprehensive repair history documentation.
 - **Search Capabilities:** Integrated query functionality for efficient retrieval of logs using server serial numbers.
 
