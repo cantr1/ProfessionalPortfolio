@@ -12,6 +12,7 @@ This repository serves as a showcase of my best projects. Here, you'll find an o
 | Pentest Workflow  | A Jupyter Notebook to show a typical workflow in penetration testing.   |
 | RemoteVM  | A project showing competency with virtual machines and networking between devices.   |
 | Quanta Repair Assistant   | A python project to help new repair technicians at a Quanta production facility.   |
+| Wireshark study  | A project to display my skills with the open-source tool Wireshark.   |
 
 ---
 ### Repair Logging Assistant
