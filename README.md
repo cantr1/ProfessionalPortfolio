@@ -1,7 +1,7 @@
 # Kelly Cantrell - Professional Portfolio
 Welcome to my Professional Portfolio! 
 
-This repository serves as a showcase of my best projects. Here, you'll find an overview of various projects I've made throughout my journey, from applications and scripts to advanced predictive algorithms.
+This repository serves as a showcase of my best projects. Here, you'll find an overview of various projects I've made.
 
 ### An Overview
 
