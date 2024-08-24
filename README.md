@@ -14,20 +14,6 @@ This repository serves as a showcase of my best projects. Here, you'll find an o
 | Quanta Repair Assistant   | A python project to help new repair technicians at a Quanta production facility.   |
 
 ---
-## Projects 
-### California Housing Market Analysis
-
-**Objective:** Analyze the California housing market to identify key factors influencing median home values and predict future housing prices.
-
-**Tools & Methods:**
-
-- **Python:** Utilized Python for data wrangling, analysis, and machine learning, with a focus on the pandas, Matplotlib, and SciKit-Learn libraries for data manipulation and visualization.
-- **Feature Engineering:** Crafted new features that capture the complexities of the real estate market, such as proximity to the ocean and household size.
-- **Statistical Analysis:** Calculated correlation coefficients to identify strong predictors of home values, with special attention to median income and geographical location.
-- **Machine Learning Modeling:** Created a RandomForestRegressor model, optimized with grid search and evaluated using k-fold cross-validation to ensure high accuracy and generalizability.
-- **Data Visualization:** Generated insightful plots to visualize geographical pricing trends and the impact of income on housing affordability.
-- **Model Performance:** Achieved a high mean cross-validation score, indicating a model that is both precise and robust in its predictive capabilities.
-
 ### Repair Logging Assistant
 
 **Objective:** Develop a Python-based tool to aid new technicians in creating systematic and informative repair logs, simplifying the technical documentation process.
