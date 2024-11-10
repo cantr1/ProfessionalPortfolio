@@ -8,6 +8,7 @@ This repository showcases my most notable projects, each demonstrating specific 
 | Project Name | Description |
 |-----------|-------------|
 | Active Directory Project  | Addressing a hypothetical service desk ticket by resolving common AD issues and tasks.   |
+| Apache Web Server  | A web server made on VM using Apache to learn more about Linux and system administration.  |
 | HTTP Filter  | A Bash script to filter HTTP traffic similarly to Wireshark, enhancing network analysis skills.  |
 | Password Manager  | A Python project focused on developing a secure and efficient password management system.   |
 | Pentest Workflow  | A Jupyter Notebook illustrating a comprehensive penetration testing workflow.  |
