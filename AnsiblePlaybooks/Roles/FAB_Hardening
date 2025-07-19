@@ -1,0 +1,13 @@
+---
+- name: Run audit script
+  script: "/etc/ansible/Scripts/audit_hardening.sh"
+  register: audit_result
+  ignore_errors: true
+
+- name: Print audit output
+  debug:
+    var: audit_result.stdout_lines
+
+- name: Run hardening script if audit failed
+  script: "/etc/ansible/Scripts/hardening_script.sh"
+  when: audit_result.rc != 0

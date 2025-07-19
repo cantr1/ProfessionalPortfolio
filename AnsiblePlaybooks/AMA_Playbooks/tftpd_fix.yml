@@ -1,0 +1,14 @@
+---
+- name: TFTP Fix
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Run Script
+    ansible.builtin.script: "/etc/ansible/Scripts/tftpd_fix.sh"
+    register: result
+    ignore_errors: true
+
+  - name: Debug output
+    ansible.builtin.debug:
+      var: result.stdout_lines

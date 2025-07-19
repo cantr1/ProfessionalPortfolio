@@ -1,0 +1,29 @@
+---
+- name: Run audit script
+  ansible.builtin.script: "/etc/ansible/Scripts/audit_hardening.sh"
+  register: audit_result
+  ignore_errors: true
+
+- name: Print audit output
+  ansible.builtin.debug:
+    var: audit_result.stdout_lines
+
+- name: Run hardening script if audit failed
+  ansible.builtin.script: "/etc/ansible/Scripts/hardening_script.sh"
+  when: audit_result.rc != 0
+
+- name: Execute Encryption Check
+  ansible.builtin.script: "/etc/ansible/Scripts/crypt_check.sh"
+  register: crypt_result
+  ignore_errors: true
+  changed_when: false
+
+- name: Debug Message for Success
+  ansible.builtin.debug:
+    msg: "🎯 All drives encrypted"
+  when: crypt_result.rc == 0
+
+- name: Debug Message for Encryption Failure
+  ansible.builtin.debug:
+      msg: "❌ Error... One or more drives unencrypted"
+  when: crypt_result.rc != 0
