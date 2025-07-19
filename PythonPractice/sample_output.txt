@@ -1,0 +1,52 @@
+██╗  ██╗ █████╗ ██████╗ ██████╗ ██╗    ██╗ █████╗ ██████╗ ███████╗    ████████╗███████╗███████╗████████╗███████╗
+██║  ██║██╔══██╗██╔══██╗██╔══██╗██║    ██║██╔══██╗██╔══██╗██╔════╝    ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝██╔════╝
+███████║███████║██████╔╝██║  ██║██║ █╗ ██║███████║██████╔╝█████╗         ██║   █████╗  ███████╗   ██║   ███████╗
+██╔══██║██╔══██║██╔══██╗██║  ██║██║███╗██║██╔══██║██╔══██╗██╔══╝         ██║   ██╔══╝  ╚════██║   ██║   ╚════██║
+██║  ██║██║  ██║██║  ██║██████╔╝╚███╔███╔╝██║  ██║██║  ██║███████╗       ██║   ███████╗███████║   ██║   ███████║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝       ╚═╝   ╚══════╝╚══════╝   ╚═╝   ╚══════╝                                   
+
+==== Testing Location ====
+ Rack 12 - DC3
+
+==== Hardware Units Tested ====
+HOSTNAME:  srv-101
+HOSTNAME:  srv-102
+
+==== Test Station Results ====
+HOSTNAME:  srv-101
+✅ cpu_burn Passed
+✅ mem_test Passed
+❌ smart_status Failed
+----
+HOSTNAME:  srv-102
+✅ cpu_burn Passed
+✅ mem_test Passed
+✅ smart_status Passed
+----
+
+==== Results of Network Interface Testing ====
+HOSTNAME:  srv-101
+INTEFACE:  eth0
+MAC ADDRESS:  00:11:22:33:44:55
+✅ PASS
+----
+INTEFACE:  eth1
+MAC ADDRESS:  00:11:22:33:44:56
+❌ FAIL
+----
+HOSTNAME:  srv-102
+INTEFACE:  eth0
+MAC ADDRESS:  00:11:22:AA:BB:CC
+✅ PASS
+----
+
+==== Storage Devices ====
+HOSTNAME:  srv-101
+Device name: /dev/sda --- Storage Size: 512G
+Device name: /dev/sdb --- Storage Size: 2000G
+Total Storage: 2.512T
+-------------------
+HOSTNAME:  srv-102
+Device name: /dev/sda --- Storage Size: 1024G
+Total Storage: 1.024T
+-------------------

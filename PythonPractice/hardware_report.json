@@ -1,0 +1,54 @@
+{
+  "report_generated": "2025-07-19T10:32:00Z",
+  "location": "Rack 12 - DC3",
+  "devices": [
+    {
+      "hostname": "srv-101",
+      "serial_number": "QT123456",
+      "vendor": "Quanta",
+      "hardware": {
+        "cpu": {
+          "model": "Intel Xeon Gold 5317",
+          "cores": 16
+        },
+        "memory_gb": 128,
+        "storage": [
+          { "device": "/dev/sda", "type": "SSD", "size_gb": 512 },
+          { "device": "/dev/sdb", "type": "HDD", "size_gb": 2000 }
+        ]
+      },
+      "network": [
+        { "iface": "eth0", "mac": "00:11:22:33:44:55", "link": "up", "passed": true },
+        { "iface": "eth1", "mac": "00:11:22:33:44:56", "link": "down", "passed": false }
+      ],
+      "tests": {
+        "cpu_burn": "pass",
+        "mem_test": "pass",
+        "smart_status": "fail"
+      }
+    },
+    {
+      "hostname": "srv-102",
+      "serial_number": "QT987654",
+      "vendor": "Quanta",
+      "hardware": {
+        "cpu": {
+          "model": "AMD EPYC 7542",
+          "cores": 32
+        },
+        "memory_gb": 256,
+        "storage": [
+          { "device": "/dev/sda", "type": "SSD", "size_gb": 1024 }
+        ]
+      },
+      "network": [
+        { "iface": "eth0", "mac": "00:11:22:AA:BB:CC", "link": "up", "passed": true }
+      ],
+      "tests": {
+        "cpu_burn": "pass",
+        "mem_test": "pass",
+        "smart_status": "pass"
+      }
+    }
+  ]
+}
