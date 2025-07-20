@@ -43,19 +43,21 @@ def network_tests():
 def storage_tests():
     line_in_file()
     print("💾 STORAGE TESTING")
+    MIN_SSD_SIZE = 500
+    MIN_HDD_SIZE = 2000
     x = 0 # variable for formatting output
     for item in report["devices"]:
         print(f"HOST: {item['hostname']}")
         for drive in item["hardware"]["storage"]:
             if drive["type"] == "SSD":
                 print(f"DETECTED DEVICE: {drive['device']} --- TYPE: {drive['type']} --- SIZE: {drive['size_gb']}")
-                if drive['size_gb'] >= 500:
+                if drive['size_gb'] >= MIN_SSD_SIZE:
                     print("✅ SSD CORRECT SIZE")
                 else:
                     print("❌ SSD INCORRECT SIZE")
             elif drive["type"] == "HDD":
                 print(f"DETECTED DEVICE: {drive['device']} --- TYPE: {drive['type']} --- SIZE: {drive['size_gb']}")
-                if drive['size_gb'] >= 2000:
+                if drive['size_gb'] >= MIN_HDD_SIZE:
                     print("✅ HDD CORRECT SIZE")
                 else:
                     print("❌ HDD INCORRECT SIZE")
@@ -100,9 +102,6 @@ def production_tests():
         # Print line in test as long as it is not the last loop
         if x <= len((report["devices"])) - 1:
             line_in_testing() 
-
-
-
 
 # ==== Main ====
 clear_terminal()
