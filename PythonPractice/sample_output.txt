@@ -1,52 +1,46 @@
-██╗  ██╗ █████╗ ██████╗ ██████╗ ██╗    ██╗ █████╗ ██████╗ ███████╗    ████████╗███████╗███████╗████████╗███████╗
-██║  ██║██╔══██╗██╔══██╗██╔══██╗██║    ██║██╔══██╗██╔══██╗██╔════╝    ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝██╔════╝
-███████║███████║██████╔╝██║  ██║██║ █╗ ██║███████║██████╔╝█████╗         ██║   █████╗  ███████╗   ██║   ███████╗
-██╔══██║██╔══██║██╔══██╗██║  ██║██║███╗██║██╔══██║██╔══██╗██╔══╝         ██║   ██╔══╝  ╚════██║   ██║   ╚════██║
-██║  ██║██║  ██║██║  ██║██████╔╝╚███╔███╔╝██║  ██║██║  ██║███████╗       ██║   ███████╗███████║   ██║   ███████║
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝       ╚═╝   ╚══════╝╚══════╝   ╚═╝   ╚══════╝                                   
-
-==== Testing Location ====
- Rack 12 - DC3
-
-==== Hardware Units Tested ====
-HOSTNAME:  srv-101
-HOSTNAME:  srv-102
-
-==== Test Station Results ====
-HOSTNAME:  srv-101
-✅ cpu_burn Passed
-✅ mem_test Passed
-❌ smart_status Failed
-----
-HOSTNAME:  srv-102
-✅ cpu_burn Passed
-✅ mem_test Passed
-✅ smart_status Passed
-----
-
-==== Results of Network Interface Testing ====
-HOSTNAME:  srv-101
-INTEFACE:  eth0
-MAC ADDRESS:  00:11:22:33:44:55
-✅ PASS
-----
-INTEFACE:  eth1
-MAC ADDRESS:  00:11:22:33:44:56
-❌ FAIL
-----
-HOSTNAME:  srv-102
-INTEFACE:  eth0
-MAC ADDRESS:  00:11:22:AA:BB:CC
-✅ PASS
-----
-
-==== Storage Devices ====
-HOSTNAME:  srv-101
-Device name: /dev/sda --- Storage Size: 512G
-Device name: /dev/sdb --- Storage Size: 2000G
-Total Storage: 2.512T
--------------------
-HOSTNAME:  srv-102
-Device name: /dev/sda --- Storage Size: 1024G
-Total Storage: 1.024T
--------------------
+Rack Location:  Rack 12 - DC3
+=======================================
+⚙️ HARDWARE REPORT
+HOST: srv-101
+VENDOR: Quanta
+CPU: Intel Xeon Gold 5317 --- 16 CORES
+RAM: 128G
+------
+HOST: srv-102
+VENDOR: Foxcon
+CPU: AMD EPYC 7542 --- 32 CORES
+RAM: 256G
+=======================================
+🛜 NETWORK TESTING
+HOST: srv-101
+✅ eth0 PASS --- MAC: 00:11:22:33:44:55
+❌ eth1 FAIL --- MAC: 00:11:22:33:44:56
+ |->  LINK STATE: down
+------
+HOST: srv-102
+✅ eth0 PASS --- MAC: 00:11:22:AA:BB:CC
+=======================================
+💾 STORAGE TESTING
+HOST: srv-101
+DETECTED DEVICE: /dev/sda --- TYPE: SSD --- SIZE: 512
+✅ SSD CORRECT SIZE
+DETECTED DEVICE: /dev/sdb --- TYPE: HDD --- SIZE: 2000
+✅ HDD CORRECT SIZE
+------
+HOST: srv-102
+DETECTED DEVICE: /dev/sda --- TYPE: SSD --- SIZE: 1024
+✅ SSD CORRECT SIZE
+=======================================
+🚀 PRODUCTION TESTS
+HOST: srv-101
+cpu_burn: PASS ✅
+mem_test: PASS ✅
+smart_status: FAIL ❌
+srv-101 PRODUCTION FAIL 🚫
+------
+HOST: srv-102
+cpu_burn: PASS ✅
+mem_test: PASS ✅
+smart_status: PASS ✅
+srv-102 PRODUCTION PASS 🎯
+=======================================
