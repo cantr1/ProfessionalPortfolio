@@ -1,0 +1,47 @@
+Enter Pokemon Name: Pikachu
+==============================
+Pokemon Name: Pikachu
+Pokemon ID: 25
+Pokemon Type: Electric
+------
+Physical Characteristics: 
+Height: 0.4m
+Weight: 6.0kg
+==============================
+Pikachu's available starter moves:
+Mega-Punch
+Pay-Day
+Thunder-Punch
+Mega-Kick
+==============================
+HP: 35
+ATTACK: 55
+DEFENSE: 40
+SPECIAL-ATTACK: 50
+SPECIAL-DEFENSE: 50
+SPEED: 90
+Would you like to query the database for another Pokemon? (y,n)y
+Enter Pokemon Name: mewtwo
+==============================
+Pokemon Name: Mewtwo
+Pokemon ID: 150
+Pokemon Type: Psychic
+------
+Physical Characteristics: 
+Height: 2.0m
+Weight: 122.0kg
+==============================
+Mewtwo's available starter moves:
+Mega-Punch
+Pay-Day
+Fire-Punch
+Ice-Punch
+==============================
+HP: 106
+ATTACK: 110
+DEFENSE: 90
+SPECIAL-ATTACK: 154
+SPECIAL-DEFENSE: 90
+SPEED: 130
+Would you like to query the database for another Pokemon? (y,n)n
+Bye!
