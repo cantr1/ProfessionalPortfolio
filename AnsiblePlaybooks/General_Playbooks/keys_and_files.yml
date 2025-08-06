@@ -1,0 +1,49 @@
+---
+- name: Copy SSH Keys and Scripts to Remote Endpoint
+  hosts: all
+  become: true
+
+  vars:
+    ssh_path: /home/tux/.ssh/
+    script_path: /home/tux/scripts/
+
+  tasks:
+  - name: Create SSH Directory if it does not exist
+    ansible.builtin.file:
+      path: "{{ ssh_path }}"
+      state: directory
+      owner: tux
+      group: tux
+      mode: '0700'
+
+  - name: Copy SSH Keys
+    ansible.builtin.copy:
+      src: "{{ ssh_path }}/id_rsa.pub"
+      dest: "{{ ssh_path }}/id_rsa.pub"
+      owner: tux
+      group: tux
+      mode: '0544'
+      backup: true
+
+  - name: Create Scripts Directory if it does not exist
+    ansible.builtin.file:
+      path: "{{ script_path }}"
+      state: directory
+      owner: tux
+      group: tux
+      mode: '0770'
+
+  - name: Copy Scripts
+    ansible.builtin.copy:
+      src: "{{ script_path }}/my_script.py"
+      dest: "{{ script_path }}/my_script.py"
+      owner: tux
+      group: tux
+      mode: '0770'
+      backup: true
+    register: result
+
+  - name: Run Script (already on remote)
+    ansible.builtin.command: "python3 {{ script_path }}/my_script.py"
+    become_user: tux
+    when: result.rc == 0
