@@ -34,16 +34,23 @@ class Pokemon:
             "id": data['id'],
             "type": data['types'][0]['type']['name'].title(),
             "height_m": data['height'] / 10,
-            "weight_kg": data['weight'] / 10
+            "weight_kg": data['weight'] / 10,
+            "hp": data['stats'][0]['base_stat']
         }
 
         return pokemon_info
+    
+    def get_pokemon_hp(self, data:dict) -> int:
+        """
+        :returns hp: int - hp of the given pokemon
+        """
+        hp = data.get('hp')
+        return hp
 
     def print_pokemon_stats(self, data: dict) -> None:
         """
         :param data: dict - takes the collected data from the api as an input and returns the base stats of the pokemon
         """
-        pad_space()
         for stat in data["stats"]:
             base_stat: int = stat['base_stat']
             stat_name: str = stat["stat"]['name']
@@ -54,7 +61,6 @@ class Pokemon:
         """
         :param data: dict - takes the collected data from the api as an input and returns the first four moves
         """
-        pad_space()
         print(f"{self.name.title()}'s available starter moves:")
         x = 0
         while x < 4: # Creating while loop to display only four moves
