@@ -25,6 +25,6 @@ def on_message(client, userdata, msg):
 
 client = mqtt.Client()
 client.on_message = on_message
-client.connect("BROKER_IP")
+client.connect("192.168.1.103")
 client.subscribe("led")
 client.loop_forever()
