@@ -1,7 +1,7 @@
-# 🐍⛓️ PyChain – Blockchain Emulator with MQTT 📡
+# 🐍⛓️ CryptoPy – Blockchain Emulator with MQTT 📡
 ## Overview
 
-PyChain is a lightweight blockchain emulator written in Python. It demonstrates:
+CryptoPy is a lightweight blockchain emulator written in Python. It demonstrates:
 
 - Blockchain fundamentals: blocks, transactions, proof-of-work.
 
