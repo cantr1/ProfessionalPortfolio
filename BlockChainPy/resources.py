@@ -1,3 +1,9 @@
+import os
+
+# Directory where this script lives
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+JSON_FILE = os.path.join(BASE_DIR, "blockchain.json")
+
 banner = r"""
   ____                  _        ____        
  / ___|_ __ _   _ _ __ | |_ ___ |  _ \ _   _ 
@@ -23,6 +29,7 @@ exit_message = r"""
    🔗 Blockchain Emulator - Session Ended
   ====================================
      Thanks for testing the chain!
+     Check the JSON for the full chain!
      Goodbye 👋
   """
 

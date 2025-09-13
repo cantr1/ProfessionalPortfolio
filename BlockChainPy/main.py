@@ -10,7 +10,12 @@ from resources import (
     transaction_message,
     chain_banner,
     last_transaction_message,
+    JSON_FILE
 )
+
+def write_to_file(data: Blockchain) -> None:
+    with open(JSON_FILE, "w") as file:
+        json.dump(data, file, indent=4)
 
 def clear_screen() -> None:
     """
@@ -26,9 +31,12 @@ def prompt_user() -> int:
     :returns usr_choice: int
     Displays prompt and asks user to choose an option
     """
-    usr_choice = int(input(prompt))
-
-    return usr_choice
+    while True:
+        try:
+            usr_choice = int(input(prompt))
+            return usr_choice
+        except ValueError:
+            print("❌ Please use a valid integer...")
 
 def view_chain(blockchain: Blockchain) -> None:
     # Pretty print
@@ -80,6 +88,7 @@ def main() -> None:
 
             elif usr_choice == 4:
                 print(exit_message)
+                write_to_file(blockchain.chain)
                 sys.exit(0)
 
             else:
