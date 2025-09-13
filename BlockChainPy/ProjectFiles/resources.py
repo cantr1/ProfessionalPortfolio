@@ -30,6 +30,7 @@ exit_message = r"""
    🔗 Blockchain Emulator - Session Ended
   ====================================
      Thanks for testing the chain!
+     MQTT Connection closed 🛰️
      Check the JSON for the full chain!
      Goodbye 👋
   """
@@ -54,3 +55,18 @@ last_transaction_message = r"""
   ====================================
      Retrieving latest entry...
   """
+
+successful_publish = r"""
+  ====================================
+   📡 Transaction Published
+  ====================================
+     Successfully sent to MQTT broker
+  """
+
+failed_publish = r"""
+  ====================================
+   ⚠️ Transaction Failed
+  ====================================
+     Could not send to MQTT broker
+  """
+

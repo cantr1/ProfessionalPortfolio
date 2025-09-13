@@ -1,4 +1,5 @@
 from blockchain import Blockchain
+from mqtt.publisher import publish_blockchain
 import sys
 import os
 import json
@@ -10,6 +11,8 @@ from resources import (
     transaction_message,
     chain_banner,
     last_transaction_message,
+    successful_publish,
+    failed_publish,
     JSON_FILE
 )
 
@@ -73,14 +76,21 @@ def main() -> None:
                 recipient = input("🤑 Who is the recipient: ")
                 amount = input("💰 What is the transaction amount: ")
 
-                # Build the block
+                # Build the block and append to current transactions
                 blockchain.new_transaction(sender, recipient, amount)
 
                 # Write it to the chain 
-                blockchain.new_block(len(blockchain.chain), 
+                block = blockchain.new_block(len(blockchain.chain), 
                                      blockchain.last_block['hash'], 
                                      blockchain.proof_of_work(blockchain.last_block['proof']))
-                print("\n")
+
+                # Publish to MQTT Container
+                try:
+                    publish_blockchain(block)
+                    print(successful_publish)
+                except ConnectionRefusedError:
+                    print(failed_publish)
+
             
             elif usr_choice == 3:
                 clear_screen()
