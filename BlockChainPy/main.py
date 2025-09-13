@@ -78,7 +78,9 @@ def main() -> None:
 
                 # Write it to the chain 
                 # TODO: Implement proof feature
-                blockchain.new_block(len(blockchain.chain), blockchain.last_block['hash'], 0)
+                blockchain.new_block(len(blockchain.chain), 
+                                     blockchain.last_block['hash'], 
+                                     blockchain.proof_of_work(blockchain.last_block['proof']))
                 print("\n")
             
             elif usr_choice == 3:
