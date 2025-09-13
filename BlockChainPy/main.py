@@ -77,7 +77,6 @@ def main() -> None:
                 blockchain.new_transaction(sender, recipient, amount)
 
                 # Write it to the chain 
-                # TODO: Implement proof feature
                 blockchain.new_block(len(blockchain.chain), 
                                      blockchain.last_block['hash'], 
                                      blockchain.proof_of_work(blockchain.last_block['proof']))
