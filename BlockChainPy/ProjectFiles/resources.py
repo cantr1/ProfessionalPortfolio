@@ -2,7 +2,8 @@ import os
 
 # Directory where this script lives
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-JSON_FILE = os.path.join(BASE_DIR, "blockchain.json")
+PARENT = os.path.dirname(BASE_DIR)
+JSON_FILE = os.path.join(PARENT, "Data/blockchain.json")
 
 banner = r"""
   ____                  _        ____        
