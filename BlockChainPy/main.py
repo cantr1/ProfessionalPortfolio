@@ -38,51 +38,55 @@ def view_chain(blockchain: Blockchain) -> None:
         print(json.dumps(blockchain, indent=4))
 
 def main() -> None:
-    # Initialize a blockchain
-    blockchain = Blockchain()
+    try:
+        # Initialize a blockchain
+        blockchain = Blockchain()
 
-    # Clear terminal screen
-    clear_screen()
+        # Clear terminal screen
+        clear_screen()
 
-    print(banner)
-    print(welcome_message)
+        print(banner)
+        print(welcome_message)
 
-    # Prompt the user for input and create an infinite while loop
-    while True:
-        usr_choice = prompt_user()
+        # Prompt the user for input and create an infinite while loop
+        while True:
+            usr_choice = prompt_user()
 
-        if usr_choice == 1:
-            clear_screen()
-            print(chain_banner)
-            view_chain(blockchain)
-            print("\n")
+            if usr_choice == 1:
+                clear_screen()
+                print(chain_banner)
+                view_chain(blockchain)
+                print("\n")
 
-        elif usr_choice == 2:
-            clear_screen()
-            print(transaction_message)
-            sender = input("🐳 Who is the sender: ")
-            recipient = input("🤑 Who is the recipient: ")
-            amount = input("💰 What is the transaction amount: ")
+            elif usr_choice == 2:
+                clear_screen()
+                print(transaction_message)
+                sender = input("🐳 Who is the sender: ")
+                recipient = input("🤑 Who is the recipient: ")
+                amount = input("💰 What is the transaction amount: ")
 
-            # Build the block
-            blockchain.new_transaction(sender, recipient, amount)
+                # Build the block
+                blockchain.new_transaction(sender, recipient, amount)
 
-            # Write it to the chain 
-            # TODO: Implement proof feature
-            blockchain.new_block(len(blockchain.chain), blockchain.last_block['hash'], 0)
-            print("\n")
-        
-        elif usr_choice == 3:
-            clear_screen()
-            print(last_transaction_message)
-            view_chain(blockchain.last_block)
+                # Write it to the chain 
+                # TODO: Implement proof feature
+                blockchain.new_block(len(blockchain.chain), blockchain.last_block['hash'], 0)
+                print("\n")
+            
+            elif usr_choice == 3:
+                clear_screen()
+                print(last_transaction_message)
+                view_chain(blockchain.last_block)
 
-        elif usr_choice == 4:
-            print(exit_message)
-            sys.exit(0)
+            elif usr_choice == 4:
+                print(exit_message)
+                sys.exit(0)
 
-        else:
-            print("❌ ERROR: Unrecognized input...")
+            else:
+                print("❌ ERROR: Unrecognized input...")
+    except KeyboardInterrupt:
+        print("Interrupt detected...")
+        print(exit_message)
 
 if __name__ == "__main__":
     main()

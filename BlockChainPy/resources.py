@@ -20,7 +20,7 @@ welcome_message = r"""
 
 exit_message = r"""
   ====================================
-   🔗 Blockchain Emulator - Session End
+   🔗 Blockchain Emulator - Session Ended
   ====================================
      Thanks for testing the chain!
      Goodbye 👋
