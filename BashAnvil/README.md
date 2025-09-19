@@ -1,4 +1,5 @@
 # Bash Anvil
+```
 .-------..___
   '-._     :_.-'
    .- ) _ ( --.
@@ -8,7 +9,7 @@
  \   |     /   \
  |   \     )_.-'
  '-._/__..-'
-
+```
 ## Overview
 
 Bash Anvil is an end-to-end automation project focused on deploying and hardening Linux systems.
