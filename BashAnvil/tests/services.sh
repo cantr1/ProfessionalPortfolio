@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -a SERVICES=("sshd" "firewalld" "nginx")
+declare -a SERVICES=("sshd" "mosquitto" "nginx")
 
 test_services() {
     for SERVICE in "${SERVICES[@]}"; do
