@@ -1,0 +1,31 @@
+---
+- name: Create groups
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ groups }}"
+
+- name: Create Users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: present
+    shell: /bin/bash
+    createhome: true
+    password: "{{ 'password' | password_hash('sha512') }}" #bad practice, obv but fine for this project
+    groups: sudo
+    append: true
+  loop: "{{ users }}"
+
+- name: Add Haley to Devops and Developers
+  ansible.builtin.user:
+    name: haley
+    groups: devops,developers
+    append: true
+
+- name: Add Millie to security
+  ansible.builtin.user:
+    name: millie
+    groups: security
+    append: true
+
+

@@ -2,7 +2,7 @@
 # Checks expected users were setup with sudo perms applied
 source lib/colors.sh
 
-declare -a USERS=("kelz" "haley" "admin")
+declare -a USERS=("millie" "haley" "admin")
 
 test_users() {
     for USER_NAME in "${USERS[@]}"; do

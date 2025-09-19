@@ -15,22 +15,25 @@
       - nginx
       - mosquitto
       - isc-dhcp-server
+    users:
+      - millie
+      - haley
+      - admin
+    groups:
+      - devops
+      - security
+      - developers
 
   tasks:
-  - name: Update APT cache
-    ansible.builtin.apt:
-      update_cache: yes
-    changed_when: no
+    - name: Clone the repo
+      ansible.builtin.git:
+        repo: 'https://github.com/cantr1/ProfessionalPortfolio.git'
+        dest: /home/kelz
 
-  - name: Install Packages
-    ansible.builtin.apt:
-      name: "{{ item }}"
-      state: present
-    loop: "{{ packages }}"
+    - name: Install Dependencies
+      ansible.builtin.import_tasks: 
+        tasks/install_dependencies.yml
 
-  - name: Enable Services
-    ansible.builtin.systemd_service:
-      state: started
-      enabled: true
-      name: "{{ item }}"
-    loop: "{{ services }}"
+    - name: Setup Users
+      ansible.builtin.import_tasks:
+        tasks/setup_user_groups.yml
