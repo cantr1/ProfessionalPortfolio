@@ -130,7 +130,7 @@ def get_disk_usage(data_dict: dict) -> None:
     data_dict["Disk Info"] = disk_dict
         
 
-def main() -> None:
+def main() -> dict:
     # Create an empty dictionary to store data
     system_data = {}
 
@@ -144,11 +144,8 @@ def main() -> None:
     get_virt_info(system_data)
 
 
-    # Convert dict to json
-    json_string = json.dumps(system_data, indent=4)
-
-    # Print
-    print(json_string)
+    # Return json data
+    return json.dumps(system_data, indent=4)
 
 if __name__ == "__main__":
-    main()
+    print(main())
