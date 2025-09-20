@@ -52,7 +52,7 @@ Login with the default **admin** credentials shown in the container logs.
 
 ## 4. Deploy!
 Click **Play ▶** on your task.  
-![image](../images/Deployment.png)
+![image](../images/Deploy-Task.png)
 
 Semaphore will run your Ansible playbook against the inventory.  
 If all goes well, you’ll see fireworks 🎆 in the UI when it completes successfully.
