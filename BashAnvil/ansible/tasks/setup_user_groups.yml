@@ -3,7 +3,7 @@
   ansible.builtin.group:
     name: "{{ item }}"
     state: present
-  loop: "{{ groups }}"
+  loop: "{{ my_groups }}"
 
 - name: Create Users
   ansible.builtin.user:

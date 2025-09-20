@@ -18,7 +18,7 @@
       - millie
       - haley
       - admin
-    groups:
+    my_groups:
       - devops
       - security
       - developers
