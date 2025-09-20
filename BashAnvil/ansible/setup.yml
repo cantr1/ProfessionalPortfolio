@@ -61,5 +61,5 @@
         name: Publish System Data to MQTT Broker
         minute: "/10"
         user: kelz
-        job: mosquitto_pub -t system/info -m "$(python3 /home/kelz/ProfessionalPortfolio/BashAnvil/system_data.py)" -h 192.168.56.1 -p 1883
+        job: mosquitto_pub -t system/"$(hostname)" -m "$(python3 /home/kelz/ProfessionalPortfolio/BashAnvil/system_data.py)" -h 192.168.1.124 -p 1883
 
