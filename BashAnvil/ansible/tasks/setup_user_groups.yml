@@ -11,7 +11,7 @@
     state: present
     shell: /bin/bash
     createhome: true
-    password: "{{ 'password' | password_hash('sha512') }}" #bad practice, obv but fine for this project
+    #password: "{{ 'password' | password_hash('sha512') }}" #bad practice, obv but fine for this project
     groups: sudo
     append: true
   loop: "{{ users }}"
