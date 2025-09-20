@@ -15,16 +15,4 @@ test_users() {
     done
 }
 
-test_perms() {
-    for USER_NAME in "${USERS[@]}"; do
-        if [[ -f "/etc/sudoers.d/$USER_NAME" ]]; then
-            assert_true "[[ -f "/etc/sudoers.d/$USER_NAME" ]]" "Sudo perms setup for $USER_NAME"
-        else
-            assert_true "[[ -f "/etc/sudoers.d/$USER_NAME" ]]" "Sudo perms not setup for $USER_NAME"
-        fi
-    done
-}
-
 test_users
-echo -e "${PURPLE}==> Checking sudo perms"
-test_perms

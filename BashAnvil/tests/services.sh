@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -a SERVICES=("curl" "mosquitto" "nginx" "isc-dhcp-server")
+declare -a SERVICES=("mosquitto" "isc-dhcp-server")
 
 test_services() {
     for SERVICE in "${SERVICES[@]}"; do

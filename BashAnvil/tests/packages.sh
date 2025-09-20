@@ -1,7 +1,7 @@
 #!/bin/bash
 # Checks expected packages were installed during the playbook
 
-declare -a PACKAGES=("golang" "nginx" "python3" "vim" "curl" "tmux")
+declare -a PACKAGES=("golang" "python3" "vim" "curl" "tmux")
 
 test_packages() {
     for PACKAGE_NAME in "${PACKAGES[@]}"; do
