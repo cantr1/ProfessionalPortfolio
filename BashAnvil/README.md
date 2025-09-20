@@ -47,9 +47,23 @@ The project covers the full lifecycle:
 
 - MQTT: lightweight monitoring updates from hosts.
 
+## Testing Example
+
+I wrote a bash program that will evaluate the state of the server following the playbook. To improve my skills, I focused on using source and making my files more modular to more accurately immulate programming rather than scripting.
+
+An example of the script follwing deployment:
+
+![image](images/Tests.png)
+
 ## Monitoring Example
 
 Hosts regularly publish JSON status messages (CPU, RAM, disk, network, etc.) to an MQTT topic, providing lightweight telemetry.
+
+I use MQTTX to connect to brokers and monitor the data coming in.
+
+![image](images/MQTT.png)
+
+The full data reported by the server is as follows:
 
 ```
 {
@@ -114,7 +128,3 @@ Hosts regularly publish JSON status messages (CPU, RAM, disk, network, etc.) to 
     "Virtualization": "wsl"
 }
 ```
-
-Cron job will look like this:
-
-*/10 * * * * mosquitto-pub -t system/info -m "$(python3 /home/kelz/scripts/system_data.py)"
