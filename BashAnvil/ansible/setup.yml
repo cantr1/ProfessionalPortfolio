@@ -37,3 +37,30 @@
     - name: Setup Users
       ansible.builtin.import_tasks:
         tasks/setup_user_groups.yml
+
+    - name: Harden Server
+      ansible.builtin.shell: "bash /home/kelz/ProfessionalPortfolio/BashAnvil/security/apply_hardening.sh"
+
+    - name: Audit Hardening
+      ansible.builtin.shell: "bash /home/kelz/ProfessionalPortfolio/BashAnvil/security/check_hardening.sh"
+      register: hardening_check
+
+    - name: Display Output of Server Hardening
+      ansible.builtin.debug:
+        msg: hardening_check.stdout
+
+    - name: Run Tests
+      ansible.builtin.shell: "bash /home/kelz/ProfessionalPortfolio/BashAnvil/runner.sh"
+      register: tests
+
+    - name: Display Output of Tests
+      ansible.builtin.debug:
+        msg: tests.stdout
+
+    - name: Setup Cron Job for MQTT Reporting
+      ansible.builtin.cron:
+        name: Publish System Data to MQTT Broker
+        minute: "/10"
+        user: kelz
+        job: mosquitto-pub -t system/info -m "$(python3 /home/kelz/ProfessionalPortfolio/system_data.py)"
+

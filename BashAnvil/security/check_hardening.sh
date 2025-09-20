@@ -3,7 +3,7 @@
 # Written By: Kelly Cantrell (Audit Version)
 
 STATUS=0 # Tracks pass (0) or fail (1)
-echo "🔍 Starting System Hardening Audit..."
+echo "🛸 Starting System Hardening Audit..."
 
 # ========== Root Login ==========
 root_shell=$(getent passwd root | cut -d: -f7)
