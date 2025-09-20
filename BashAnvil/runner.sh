@@ -4,6 +4,9 @@
 source lib/colors.sh
 source lib/assert.sh
 
+# Change to working dir
+cd /home/kelz/ProfessionalPortfolio/BashAnvil || echo "Unable to enter proper dir"
+
 echo -e "${YELLOW}Running tests...${NC}"
 
 for testfile in tests/*.sh; do
