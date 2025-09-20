@@ -9,4 +9,4 @@ EOF
 
 sudo systemctl restart mosquitto
 
-echo "📡 MQTT Now Setup"
+echo "MQTT Now Setup"

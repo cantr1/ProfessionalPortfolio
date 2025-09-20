@@ -17,4 +17,4 @@ EOF
 
 sudo systemctl restart isc-dhcp-server
 
-echo "🛸 DHCP Now Setup"
+echo "DHCP Now Setup"
