@@ -2,6 +2,7 @@
 - name: Server Setup
   hosts: all
   become: true
+  become_user: root
 
   vars:
     packages:
