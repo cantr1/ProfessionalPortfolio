@@ -27,7 +27,9 @@
     - name: Clone the repo
       ansible.builtin.git:
         repo: 'https://github.com/cantr1/ProfessionalPortfolio.git'
-        dest: /home/kelz
+        dest: /home/kelz/ProfessionalPortfolio
+        version: main
+        update: true
 
     - name: Install Dependencies
       ansible.builtin.import_tasks: 
