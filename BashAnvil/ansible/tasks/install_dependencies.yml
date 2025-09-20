@@ -9,10 +9,3 @@
     name: "{{ item }}"
     state: present
   loop: "{{ packages }}"
-
-- name: Enable Services
-  ansible.builtin.systemd_service:
-    state: started
-    enabled: true
-    name: "{{ item }}"
-  loop: "{{ services }}"

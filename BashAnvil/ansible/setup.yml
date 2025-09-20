@@ -5,14 +5,12 @@
 
   vars:
     packages:
-      - nginx
       - mosquitto
       - curl
       - vim
       - tmux
       - isc-dhcp-server
     services:
-      - nginx
       - mosquitto
       - isc-dhcp-server
     users:

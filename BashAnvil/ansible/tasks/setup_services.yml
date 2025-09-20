@@ -1,0 +1,23 @@
+---
+- name: Setup MQTT
+  ansible.builtin.shell: "bash /home/kelz/ProfessionalPortfolio/BashAnvil/setup_scripts/setup_mqtt.sh"
+  register: mqtt
+
+- name: Debug MQTT
+  ansible.builtin.debug:
+    msg: mqtt.stdout
+
+- name: Setup DHCP
+  ansible.builtin.shell: "bash /home/kelz/ProfessionalPortfolio/BashAnvil/setup_scripts/setup_dhcp.sh"
+  register: dchp
+
+- name: Debug DHCP
+  ansible.builtin.debug:
+    msg: dhcp.stdout
+
+- name: Enable Services
+  ansible.builtin.systemd_service:
+    state: started
+    enabled: true
+    name: "{{ item }}"
+  loop: "{{ services }}"
