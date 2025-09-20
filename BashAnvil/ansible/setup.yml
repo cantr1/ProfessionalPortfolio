@@ -36,6 +36,10 @@
     - name: Setup Users
       ansible.builtin.import_tasks:
         tasks/setup_user_groups.yml
+    
+    - name: Setup Services
+      ansible.builtin.import_tasks:
+        tasks/setup_services.yml
 
     - name: Harden Server
       ansible.builtin.shell: "bash /home/kelz/ProfessionalPortfolio/BashAnvil/security/apply_hardening.sh"
