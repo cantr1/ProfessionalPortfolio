@@ -30,6 +30,12 @@
         dest: /home/kelz/ProfessionalPortfolio
         version: main
         update: true
+    
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: true
+      changed_when: false
+      become: true
 
     - name: Install Dependencies
       ansible.builtin.import_tasks: 

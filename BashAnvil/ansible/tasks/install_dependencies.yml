@@ -1,10 +1,4 @@
 ---
-- name: Update APT cache
-  ansible.builtin.apt:
-    update_cache: true
-  changed_when: false
-  become: true
-
 - name: Install Packages
   ansible.builtin.apt:
     name: "{{ item }}"
