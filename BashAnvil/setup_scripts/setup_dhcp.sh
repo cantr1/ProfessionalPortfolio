@@ -16,7 +16,7 @@ subnet $THIRD_OCTET.0 netmask 255.255.255.0 {
 }
 EOF
 
-sed -i "s/INTERFACESv4=""/INTERFACESv4=$ACTIVE_INTERFACE/" /etc/default/isc-dhcp-server
+sed -i "s/^INTERFACESv4=.*/INTERFACESv4=\"$ACTIVE_INTERFACE\"/" /etc/default/isc-dhcp-server
 
 sudo systemctl restart isc-dhcp-server
 
