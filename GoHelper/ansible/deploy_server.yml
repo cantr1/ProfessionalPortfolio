@@ -22,6 +22,14 @@
       - nginx
       - python3
 
+  - name: Copy HTML file for Nginx
+    ansible.builtin.copy:
+      src: /home/kelz/Workspace/GoHelper/resources/index.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: '0644'
+
   - name: Enable services
     ansible.builtin.systemd:
       name: "{{ item }}"
@@ -50,7 +58,7 @@
     ansible.builtin.cron:
       name: Publish System Data to MQTT Broker
       minute: "*"
-      user: kelz
+      user: root
       job: mosquitto_pub -t system/"$(hostname)" -m "$(python3 /home/kelz/system_data.py)" -h 192.168.1.124 -p 1883
 
   - name: Copy Python script for Nginx Reporting
@@ -65,5 +73,5 @@
     ansible.builtin.cron:
       name: Publish System Data to Nginx
       minute: "*"
-      user: kelz
+      user: root
       job: /usr/bin/python3 /home/kelz/pub_json.py
