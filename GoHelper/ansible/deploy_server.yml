@@ -22,13 +22,21 @@
       - nginx
       - python3
 
+  - name: Clone the repo
+    ansible.builtin.git:
+      repo: 'https://github.com/cantr1/ProfessionalPortfolio.git'
+      dest: /home/kelz/ProfessionalPortfolio
+      version: main
+      update: true
+
   - name: Copy HTML file for Nginx
     ansible.builtin.copy:
-      src: /home/kelz/Workspace/GoHelper/resources/index.html
+      src: /home/kelz/ProfessionalPortfolio/GoHelper/resources/index.html
       dest: /var/www/html/index.html
       owner: root
       group: root
       mode: '0644'
+      remote_src: true
 
   - name: Enable services
     ansible.builtin.systemd:
@@ -48,11 +56,12 @@
 
   - name: Copy Python script for MQTT Reporting
     ansible.builtin.copy:
-      src: /home/kelz/Workspace/ProfessionalPortfolio/GoHelper/resources/system_data.py
+      src: /home/kelz/ProfessionalPortfolio/GoHelper/resources/system_data.py
       dest: /home/kelz/system_data.py
       owner: kelz
       group: kelz
       mode: '0700'
+      remote_src: true
 
   - name: Setup Cron Job for MQTT Reporting
     ansible.builtin.cron:
@@ -63,7 +72,7 @@
 
   - name: Copy Python script for Nginx Reporting
     ansible.builtin.copy:
-      src: /home/kelz/Workspace/ProfessionalPortfolio/GoHelper/resources/pub_json.py
+      src: /home/kelz/ProfessionalPortfolio/GoHelper/resources/pub_json.py
       dest: /home/kelz/pub_json.py
       owner: kelz
       group: kelz
