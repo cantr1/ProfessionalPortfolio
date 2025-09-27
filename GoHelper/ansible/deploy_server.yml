@@ -23,6 +23,7 @@
       - python3
       - git
       - pip
+      - python3-psutil
 
   - name: Clone the repo
     ansible.builtin.git:
@@ -48,13 +49,6 @@
     loop:
       - nginx
       - mosquitto
-
-  - name: Pip install required packages
-    ansible.builtin.pip:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - psutil
 
   - name: Copy Python script for MQTT Reporting
     ansible.builtin.copy:
