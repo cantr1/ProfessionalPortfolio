@@ -32,6 +32,15 @@
       version: main
       update: true
 
+  - name: Copy Mosquitto Conf for MQTT
+    ansible.builtin.copy:
+      src: /home/kelz/ProfessionalPortfolio/GoHelper/resources/mosquitto.conf
+      path: /etc/mosquitto/mosquitto.conf
+      owner: root
+      group: root
+      mode: '0644'
+      remote_src: true
+
   - name: Copy HTML file for Nginx
     ansible.builtin.copy:
       src: /home/kelz/ProfessionalPortfolio/GoHelper/resources/index.html
