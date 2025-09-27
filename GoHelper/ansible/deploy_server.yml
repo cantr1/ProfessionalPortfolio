@@ -21,6 +21,7 @@
       - mosquitto-clients
       - nginx
       - python3
+      - git
 
   - name: Clone the repo
     ansible.builtin.git:
