@@ -35,7 +35,7 @@
   - name: Copy Mosquitto Conf for MQTT
     ansible.builtin.copy:
       src: /home/kelz/ProfessionalPortfolio/GoHelper/resources/mosquitto.conf
-      path: /etc/mosquitto/mosquitto.conf
+      dest: /etc/mosquitto/mosquitto.conf
       owner: root
       group: root
       mode: '0644'
