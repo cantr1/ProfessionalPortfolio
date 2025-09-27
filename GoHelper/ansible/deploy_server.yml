@@ -17,14 +17,31 @@
     loop:
       - curl
       - vim
+      - mosquitto
       - mosquitto-clients
-      - mosquitto-server
       - nginx
+      - python3
+
+  - name: Enable services
+    ansible.builtin.systemd:
+      name: "{{ item }}"
+      state: started
+      enabled: true
+    loop:
+      - nginx
+      - mosquitto
+
+  - name: Pip install required packages
+    ansible.builtin.pip:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - psutil
 
   - name: Copy Python script for MQTT Reporting
     ansible.builtin.copy:
       src: /home/kelz/Workspace/ProfessionalPortfolio/GoHelper/resources/system_data.py
-      dest: /home/kelz/system_data
+      dest: /home/kelz/system_data.py
       owner: kelz
       group: kelz
       mode: '0700'
@@ -35,3 +52,18 @@
       minute: "*"
       user: kelz
       job: mosquitto_pub -t system/"$(hostname)" -m "$(python3 /home/kelz/system_data.py)" -h 192.168.1.124 -p 1883
+
+  - name: Copy Python script for Nginx Reporting
+    ansible.builtin.copy:
+      src: /home/kelz/Workspace/ProfessionalPortfolio/GoHelper/resources/pub_json.py
+      dest: /home/kelz/pub_json.py
+      owner: kelz
+      group: kelz
+      mode: '0700'
+
+  - name: Setup Cron Job for Nginx Reporting
+    ansible.builtin.cron:
+      name: Publish System Data to Nginx
+      minute: "*"
+      user: kelz
+      job: /usr/bin/python3 /home/kelz/pub_json.py
