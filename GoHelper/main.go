@@ -3,10 +3,25 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	"gopkg.in/yaml.v3"
 )
+
+// Struct for hosts file
+type Config struct {
+	Hosts []Host `yaml:"hosts"`
+}
+
+type Host struct {
+	Name string `yaml:"name"`
+	IP   string `yaml:"ip`
+}
 
 // Structs to handle MQTT Data
 type SystemData struct {
@@ -51,12 +66,12 @@ type NetworkInfo struct {
 
 // ===== BEGIN MQTT FUNCTIONS =====
 var connectHandler = func(textView *tview.TextView) mqtt.OnConnectHandler {
-	return func(Client mqtt.Client, err error) {
+	return func(Client mqtt.Client) {
 		fmt.Fprintf(textView, "") // Empty string so connection messages do not fill application
 	}
 }
 
-var connectLostHandler = func(textView *tview.TextView) mqtt.connectLostHandler {
+var connectLostHandler = func(textView *tview.TextView) mqtt.ConnectionLostHandler {
 	return func(Client mqtt.Client, err error) {
 		fmt.Fprintf(textView, "Connection lost: %v\n", err)
 	}
@@ -66,7 +81,7 @@ func mqtt_messagePubHandler(app *tview.Application, textView *tview.TextView) mq
 	return func(Client mqtt.Client, msg mqtt.Message) {
 		var s SystemData
 
-		if err := json.Unmarshal(msg.Payload(), &d); err != nil {
+		if err := json.Unmarshal(msg.Payload(), &s); err != nil {
 			fmt.Fprintf(textView, "JSON Decode Error: %v\n", err)
 		}
 
@@ -97,33 +112,102 @@ func sub_MQTT(Client mqtt.Client, app *tview.Application, textView *tview.TextVi
 }
 
 func main() {
-	newPrimitive := func(text string) tview.Primitive {
-		return tview.NewTextView().
-			SetTextAlign(tview.AlignCenter).
-			SetText(text)
+	// Read the yaml file
+	data, err := os.ReadFile("hosts.yml")
+	if err != nil {
+		log.Fatalf("Error reading yaml file: %v", err)
 	}
-	menu := newPrimitive("Menu")
-	main := newPrimitive("Main content")
-	sideBar := newPrimitive("Side Bar")
 
-	grid := tview.NewGrid().
-		SetRows(3, 0, 3).
-		SetColumns(30, 0, 30).
-		SetBorders(true).
-		AddItem(newPrimitive("Header"), 0, 0, 1, 3, 0, 0, false).
-		AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
+	// Parse into Config
+	var cfg Config
+	if err := yaml.Unmarshal(data, &cfg); err != nil {
+		log.Fatalf("Error processing data: %v", err)
+	}
 
-	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
-	grid.AddItem(menu, 0, 0, 0, 0, 0, 0, false).
-		AddItem(main, 1, 0, 1, 3, 0, 0, false).
-		AddItem(sideBar, 0, 0, 0, 0, 0, 0, false)
+	app := tview.NewApplication()
+	pages := tview.NewPages()
 
-	// Layout for screens wider than 100 cells.
-	grid.AddItem(menu, 1, 0, 1, 1, 0, 100, false).
-		AddItem(main, 1, 1, 1, 1, 0, 100, false).
-		AddItem(sideBar, 1, 2, 1, 1, 0, 100, false)
+	// Main list for hosts
+	list := tview.NewList()
+	pages.AddPage("list", list, true, true)
 
-	if err := tview.NewApplication().SetRoot(grid, true).EnableMouse(true).Run(); err != nil {
+	// Loop through hosts and add to application
+	for i, host := range cfg.Hosts {
+		h := host
+
+		itemText := fmt.Sprintf("%s (%s)", h.Name, h.IP)
+		list.AddItem(strings.ToUpper(itemText), "Press Enter to Select Host", rune('1'+i), func() {
+			// Create header and footer for grid
+			var header *tview.TextView
+			header = tview.NewTextView()
+			header.SetBorder(true)
+			header.SetText(fmt.Sprintf("HOST: %s", strings.ToUpper(h.Name)))
+			header.SetTextAlign(tview.AlignCenter)
+
+			var footer *tview.TextView
+			footer = tview.NewTextView()
+			footer.SetBorder(true)
+			footer.SetText("Data will refresh at regular intervals - 'q' to quit")
+			footer.SetTextAlign(tview.AlignCenter)
+
+			// Create the grid
+			grid := tview.NewGrid().
+				SetRows(3, 0, 3).
+				SetColumns(30, 0, 30).
+				SetBorders(true).
+				AddItem(header, 0, 0, 1, 3, 0, 0, false).
+				AddItem(footer, 2, 0, 1, 3, 0, 0, false)
+
+			// Create textView's for data
+			var textView_MQTT *tview.TextView
+			textView_MQTT = tview.NewTextView()
+			textView_MQTT.SetDynamicColors(true).
+				SetTitle(" MQTT Data ").
+				SetTitleAlign(tview.AlignCenter)
+
+			// Add items to the grid
+			grid.AddItem(textView_MQTT, 1, 0, 1, 1, 0, 0, true)
+			grid.AddItem(textView_MQTT, 1, 2, 1, 1, 0, 0, true)
+			grid.AddItem(textView_MQTT, 1, 1, 1, 1, 0, 0, true)
+
+			// Set pages: list <-> grid
+			pages.AddAndSwitchToPage("grid", grid, true)
+
+			go func() {
+				var broker = h.IP
+				var port = 1883
+
+				// Set options for MQTT
+				opts := mqtt.NewClientOptions()
+				opts.AddBroker(fmt.Sprintf("tcp://%s:%d", broker, port))
+				opts.SetClientID("MQTT")
+				opts.OnConnect = connectHandler(textView_MQTT)
+				opts.OnConnectionLost = connectLostHandler(textView_MQTT)
+				MQTT_Output := mqtt.NewClient(opts)
+
+				if token := MQTT_Output.Connect(); token.Wait() && token.Error() != nil {
+					panic(token.Error())
+				}
+
+				sub_MQTT(MQTT_Output, app, textView_MQTT)
+
+				grid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+					if event.Key() == tcell.KeyEsc || event.Rune() == 'q' {
+						MQTT_Output.Disconnect(250)
+						pages.SwitchToPage("list")
+						return nil
+					}
+					return event
+				})
+			}()
+		})
+	}
+
+	list.AddItem("Quit", "Press to exit", 'q', func() {
+		app.Stop()
+	})
+
+	if err := app.SetRoot(pages, true).EnableMouse(true).Run(); err != nil {
 		panic(err)
 	}
 }
