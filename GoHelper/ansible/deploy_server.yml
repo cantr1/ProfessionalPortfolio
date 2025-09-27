@@ -90,3 +90,11 @@
       minute: "*"
       user: root
       job: /usr/bin/python3 /home/kelz/pub_json.py
+
+  - name: Restart services to ensure configs
+    ansible.builtin.systemd:
+      name: "{{ item }}"
+      state: restarted
+    loop:
+      - nginx
+      - mosquitto
