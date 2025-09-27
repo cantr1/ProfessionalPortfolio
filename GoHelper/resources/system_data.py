@@ -54,6 +54,8 @@ def get_cpu_info(data_dict: dict) -> str:
     # Process into a dictionary for ease of use
     raw_cpu_dict = {}
     for line in raw_cpu_data.stdout.splitlines():
+        if ":" not in line:
+            continue
         key, value = line.split(":", 1)
         raw_cpu_dict[key] = value
     
