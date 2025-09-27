@@ -73,7 +73,7 @@
       name: Publish System Data to MQTT Broker
       minute: "*"
       user: root
-      job: mosquitto_pub -t system/"$(hostname)" -m "$(python3 /home/kelz/system_data.py)" -h 192.168.1.124 -p 1883
+      job: mosquitto_pub -t system/"$(hostname)" -m "$(python3 /home/kelz/system_data.py)" -h localhost -p 1883
 
   - name: Copy Python script for Nginx Reporting
     ansible.builtin.copy:
