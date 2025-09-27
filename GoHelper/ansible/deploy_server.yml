@@ -73,6 +73,7 @@
       owner: kelz
       group: kelz
       mode: '0700'
+      remote_src: true
 
   - name: Setup Cron Job for Nginx Reporting
     ansible.builtin.cron:
