@@ -22,6 +22,7 @@
       - nginx
       - python3
       - git
+      - pip
 
   - name: Clone the repo
     ansible.builtin.git:
