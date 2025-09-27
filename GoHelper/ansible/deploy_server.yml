@@ -1,0 +1,37 @@
+---
+- name: Server Deployment Playbook
+  hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+  - name: Update APT Cache
+    ansible.builtin.apt:
+      update_cache: true
+      upgrade: true
+
+  - name: Install packages
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - curl
+      - vim
+      - mosquitto-clients
+      - mosquitto-server
+      - nginx
+
+  - name: Copy Python script for MQTT Reporting
+    ansible.builtin.copy:
+      src: /home/kelz/Workspace/ProfessionalPortfolio/GoHelper/resources/system_data.py
+      dest: /home/kelz/system_data
+      owner: kelz
+      group: kelz
+      mode: '0700'
+
+  - name: Setup Cron Job for MQTT Reporting
+    ansible.builtin.cron:
+      name: Publish System Data to MQTT Broker
+      minute: "*"
+      user: kelz
+      job: mosquitto_pub -t system/"$(hostname)" -m "$(python3 /home/kelz/system_data.py)" -h 192.168.1.124 -p 1883
