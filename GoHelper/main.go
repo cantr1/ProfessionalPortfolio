@@ -82,7 +82,7 @@ Written In: Golang
   |                            |   
    |                           |   
 
-   
+
 `
 
 // Web Function //
@@ -221,8 +221,8 @@ func main() {
 
 			// Add items to the grid
 			grid.AddItem(textView_MQTT, 1, 0, 1, 1, 0, 0, true)
-			grid.AddItem(textView_Details, 1, 2, 1, 1, 0, 0, true)
-			grid.AddItem(textView_WEB, 1, 1, 1, 1, 0, 0, true)
+			grid.AddItem(textView_Details, 1, 1, 1, 1, 0, 0, true)
+			grid.AddItem(textView_WEB, 1, 2, 1, 1, 0, 0, true)
 
 			// Set pages: list <-> grid
 			pages.AddAndSwitchToPage("grid", grid, true)
