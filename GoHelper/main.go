@@ -69,6 +69,20 @@ type NetworkInfo struct {
 var projectDetails string = `
 Written By: Kelly Cantrell
 Written In: Golang
+
+     ,_---~~~~~----._         
+  _,,_,*^____      _____''*g*\"*, 
+ / __/ /'     ^.  /      \ ^@q   f 
+[  @f | @))    |  | @))   l  0 _/  
+ '/   \~____ / __ \_____/    \   
+  |           _l__l_           I   
+  }          [______]           I  
+  ]            | | |            |  
+  ]             ~ ~             |  
+  |                            |   
+   |                           |   
+
+   
 `
 
 // Web Function //
@@ -118,18 +132,14 @@ func mqtt_messagePubHandler(app *tview.Application, textView *tview.TextView) mq
 			textView.Clear()
 
 			fmt.Fprintf(textView, " ===================\n Basic Information\n ")
-			fmt.Fprintf(textView, "   Hostname: %s\n", s.Hostname)
-			fmt.Fprintf(textView, "   OS Version: %s\n", s.OSVersion)
-			fmt.Fprintf(textView, "   Virtualization: %s\n", s.Virtualization)
-			fmt.Fprintf(textView, "   Kernel: %s\n", s.Kernel)
-			fmt.Fprintf(textView, "   Uptime: %s\n", s.Uptime)
+			fmt.Fprintf(textView, " Hostname: %s\n", s.Hostname)
+			fmt.Fprintf(textView, " OS: %s\n", s.OSVersion)
+			fmt.Fprintf(textView, " Virtualization: %s\n", s.Virtualization)
+			fmt.Fprintf(textView, " Kernel: %s\n", s.Kernel)
 			fmt.Fprintf(textView, " ===================\n CPU Information\n ")
-			fmt.Fprintf(textView, "   Model Name: %s\n", s.CPUInfo.ModelName)
-			fmt.Fprintf(textView, "   Cores: %s\n", s.CPUInfo.Cores)
-			fmt.Fprintf(textView, "   Clock Rate: %sMHz\n", s.CPUInfo.CPUMHz)
-			fmt.Fprintf(textView, " ===================\n Network Information\n ")
-			fmt.Fprintf(textView, "   IPv4 Address: %s\n", s.NetworkInfo.IPv4)
-			fmt.Fprintf(textView, "   MAC Address: %s\n", s.NetworkInfo.MAC)
+			fmt.Fprintf(textView, " Model Name: %s\n", s.CPUInfo.ModelName)
+			fmt.Fprintf(textView, " Cores: %s\n", s.CPUInfo.Cores)
+			fmt.Fprintf(textView, " Clock Rate: %sMHz\n", s.CPUInfo.CPUMHz)
 		})
 	}
 }
