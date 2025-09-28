@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 
@@ -20,7 +22,7 @@ type Config struct {
 
 type Host struct {
 	Name string `yaml:"name"`
-	IP   string `yaml:"ip`
+	IP   string `yaml:"ip"`
 }
 
 // Structs to handle MQTT Data
@@ -64,6 +66,33 @@ type NetworkInfo struct {
 	MAC  string `json:"MAC Address"`
 }
 
+var projectDetails string = `
+Written By: Kelly Cantrell
+Written In: Golang
+`
+
+// Web Function //
+func getWebData(textView *tview.TextView, app *tview.Application, hostIP string) {
+	webAddress := fmt.Sprintf("http://%s/status.json", hostIP)
+	resp, err := http.Get(webAddress)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	app.QueueUpdateDraw(func() {
+		textView.Clear()
+
+		fmt.Fprintf(textView, string(body))
+
+	})
+}
+
 // ===== BEGIN MQTT FUNCTIONS =====
 var connectHandler = func(textView *tview.TextView) mqtt.OnConnectHandler {
 	return func(Client mqtt.Client) {
@@ -97,7 +126,7 @@ func mqtt_messagePubHandler(app *tview.Application, textView *tview.TextView) mq
 			fmt.Fprintf(textView, " ===================\n CPU Information\n ")
 			fmt.Fprintf(textView, "   Model Name: %s\n", s.CPUInfo.ModelName)
 			fmt.Fprintf(textView, "   Cores: %s\n", s.CPUInfo.Cores)
-			fmt.Fprintf(textView, "   Refresh Rate: %sMHz\n", s.CPUInfo.CPUMHz)
+			fmt.Fprintf(textView, "   Clock Rate: %sMHz\n", s.CPUInfo.CPUMHz)
 			fmt.Fprintf(textView, " ===================\n Network Information\n ")
 			fmt.Fprintf(textView, "   IPv4 Address: %s\n", s.NetworkInfo.IPv4)
 			fmt.Fprintf(textView, "   MAC Address: %s\n", s.NetworkInfo.MAC)
@@ -158,17 +187,32 @@ func main() {
 				AddItem(header, 0, 0, 1, 3, 0, 0, false).
 				AddItem(footer, 2, 0, 1, 3, 0, 0, false)
 
-			// Create textView's for data
+			// Create textView's for MQTT data
 			var textView_MQTT *tview.TextView
 			textView_MQTT = tview.NewTextView()
 			textView_MQTT.SetDynamicColors(true).
 				SetTitle(" MQTT Data ").
 				SetTitleAlign(tview.AlignCenter)
 
+			// Create textView for Web data
+			var textView_WEB *tview.TextView
+			textView_WEB = tview.NewTextView()
+			textView_WEB.SetDynamicColors(true).
+				SetTitle(" Web Data").
+				SetTitleAlign(tview.AlignCenter)
+
+			// Create textView for Project details
+			var textView_Details *tview.TextView
+			textView_Details = tview.NewTextView()
+			textView_Details.SetDynamicColors(true).
+				SetTitle(" Project Details ").
+				SetTitleAlign(tview.AlignCenter)
+			textView_Details.SetText(projectDetails).SetTextAlign(tview.AlignCenter)
+
 			// Add items to the grid
 			grid.AddItem(textView_MQTT, 1, 0, 1, 1, 0, 0, true)
-			grid.AddItem(textView_MQTT, 1, 2, 1, 1, 0, 0, true)
-			grid.AddItem(textView_MQTT, 1, 1, 1, 1, 0, 0, true)
+			grid.AddItem(textView_Details, 1, 2, 1, 1, 0, 0, true)
+			grid.AddItem(textView_WEB, 1, 1, 1, 1, 0, 0, true)
 
 			// Set pages: list <-> grid
 			pages.AddAndSwitchToPage("grid", grid, true)
@@ -189,7 +233,11 @@ func main() {
 					panic(token.Error())
 				}
 
+				// Subscribe to MQTT broker and display data
 				sub_MQTT(MQTT_Output, app, textView_MQTT)
+
+				// Pull info from web server
+				getWebData(textView_WEB, app, h.IP)
 
 				grid.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 					if event.Key() == tcell.KeyEsc || event.Rune() == 'q' {
