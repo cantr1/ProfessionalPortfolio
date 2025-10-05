@@ -76,7 +76,7 @@ Then visit:
 
 - POST /run → Run async monitor and return results
 
-![images](images/3.png)
+![images](images/2.png)
 
 ## 🧩 Example Flow
 
