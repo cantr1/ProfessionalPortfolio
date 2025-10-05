@@ -72,7 +72,6 @@ Then visit:
 - Endpoints:
   - GET /status → View configured hosts
 
-<<<<<<< HEAD
 ![images](images/3.png)
 
 - POST /run → Run async monitor and return results
