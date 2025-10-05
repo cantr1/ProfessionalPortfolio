@@ -71,19 +71,12 @@ Then visit:
 
 - Endpoints:
   - GET /status → View configured hosts
-
+  - 
 ![images](images/3.png)
 
 - POST /run → Run async monitor and return results
 
-![images](images/2.png)
-=======
-![images](images/2.png)
-
-- POST /run → Run async monitor and return results
-
 ![images](images/3.png)
->>>>>>> 13cb645aedf5012b40fd80ff7ebda44fe137f983
 
 ## 🧩 Example Flow
 
