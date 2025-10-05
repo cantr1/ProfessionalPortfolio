@@ -56,6 +56,8 @@ python main.py -a      # Add a new endpoint
 python main.py -r      # Run async checks on all endpoints
 ```
 
+![images](images/4.png)
+
 ## 🌐 API Usage
 
 Start the API server:
@@ -64,9 +66,17 @@ Start the API server:
 Then visit:
 
 - Docs (Swagger UI): http://127.0.0.1:8000/docs
+
+![images](images/1.png)
+
 - Endpoints:
   - GET /status → View configured hosts
-  - POST /run → Run async monitor and return results
+
+![images](images/3.png)
+
+- POST /run → Run async monitor and return results
+
+![images](images/2.png)
 
 ## 🧩 Example Flow
 
