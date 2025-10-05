@@ -1,0 +1,38 @@
+2025-10-04 18:55 - INFO - Adding host to file
+2025-10-04 18:55 - INFO - Adding host to file
+2025-10-04 18:55 - INFO - Removing host from file
+2025-10-04 18:55 - INFO - Removing host from file
+2025-10-05 08:11 - INFO - Google responded 200 in 0.27s
+2025-10-05 08:15 - INFO - Starting single target test
+2025-10-05 08:15 - INFO - Facebook responded 200 in 0.42s
+2025-10-05 08:15 - INFO - Single test finished
+2025-10-05 08:15 - INFO - Starting single target test
+2025-10-05 08:15 - INFO - Google responded 200 in 0.21s
+2025-10-05 08:15 - INFO - Single test finished
+2025-10-05 08:16 - INFO - Starting single target test
+2025-10-05 08:16 - INFO - Facebook responded 200 in 1.17s
+2025-10-05 08:16 - INFO - Single test finished
+2025-10-05 08:31 - INFO - Starting multi-host test with 2 targets
+2025-10-05 08:31 - INFO - Google responded 200 in 0.20s
+2025-10-05 08:31 - INFO - Facebook responded 200 in 0.34s
+2025-10-05 08:31 - INFO - Finished multi-host test
+2025-10-05 08:50 - INFO - Starting multi-host test with 2 targets
+2025-10-05 08:50 - INFO - Google responded 200 in 0.22s
+2025-10-05 08:50 - INFO - Facebook responded 200 in 0.37s
+2025-10-05 08:50 - INFO - Finished multi-host test
+2025-10-05 08:52 - INFO - Starting multi-host test with 2 targets
+2025-10-05 08:52 - INFO - Google responded 200 in 0.19s
+2025-10-05 08:52 - INFO - Facebook responded 200 in 0.35s
+2025-10-05 08:52 - INFO - Finished multi-host test
+2025-10-05 08:53 - INFO - Starting multi-host test with 2 targets
+2025-10-05 08:53 - INFO - Google responded 200 in 0.21s
+2025-10-05 08:53 - INFO - Facebook responded 200 in 0.35s
+2025-10-05 08:53 - INFO - Finished multi-host test
+2025-10-05 08:54 - INFO - Starting multi-host test with 2 targets
+2025-10-05 08:54 - INFO - Google responded 200 in 0.19s
+2025-10-05 08:54 - INFO - Facebook responded 200 in 0.35s
+2025-10-05 08:54 - INFO - Finished multi-host test
+2025-10-05 08:55 - INFO - Starting multi-host test with 2 targets
+2025-10-05 08:55 - INFO - Google responded 200 in 0.23s
+2025-10-05 08:55 - INFO - Facebook responded 200 in 0.33s
+2025-10-05 08:55 - INFO - Finished multi-host test

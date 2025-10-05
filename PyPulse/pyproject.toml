@@ -1,0 +1,7 @@
+[project]
+name = "FastAPI_Project"
+version = "0.1.0"
+description = "A project to practice work with API's, logging, argparse and asyncio."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = []
