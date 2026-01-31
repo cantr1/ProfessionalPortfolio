@@ -1,0 +1,38 @@
+---
+- name: Setup Redis Server
+  hosts: database
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Pull the redis image
+      containers.podman.podman_image:
+        name: docker.io/library/redis:7
+        state: present
+
+    - name: Run the redis container
+      containers.podman.podman_container:
+        name: redis_dev
+        image: docker.io/library/redis:7
+        state: started
+        ports:
+          - "6379:6379"
+      notify: Container
+
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        port: 6379/tcp
+        permanent: true
+        state: enabled
+      notify: Firewall
+
+  handlers:
+    - name: Container
+      ansible.builtin.debug:
+        msg: "Redis container started"
+        verbosity: 2
+
+    - name: Firewall
+      ansible.builtin.debug:
+        msg: "Redis port (6379) now open on the firewall"
+        verbosity: 2
