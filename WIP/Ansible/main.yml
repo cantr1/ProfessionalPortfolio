@@ -1,0 +1,15 @@
+---
+- name: Main Deployment Playbook
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Begin Execution
+      ansible.builtin.debug:
+        msg: "Beginning execution on node: ({{ inventory_hostname }})"
+
+  handlers:
+    - name: Python Complete
+      ansible.builtin.debug:
+        msg: "Python deployment complete"
