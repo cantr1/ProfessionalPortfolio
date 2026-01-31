@@ -36,28 +36,28 @@ async def startup():
                   port=redis_port,
                   decode_responses=True)
 
-    logging.info("==== API Started ====")
-
-
-@app.get("/")
-async def root():
-    """Just a way to quickly check API connectivity"""
-    logging.info("Connectivity Confirmed - API Accepting Requests")
-    return {"message": "Hello, Python!"}
+    logging.info("======== API Started ========")
 
 
 @app.post("/set")
 async def set_key(kv: KV):
     await redis.set(kv.key, kv.value)
-    logging.info(f"Set Method Called - ({kv.key}: {kv.value})")
+    logging.info(f"SET - ({kv.key}: {kv.value})")
     return {"ok": True}
 
 
 @app.get("/get/{key}")
 async def get_key(kv: KV):
     value = await redis.get(kv.key)
-    logging.info(f"Get Method Called on ({kv.key}) - Returning {value})")
+    logging.info(f"GET: ({kv.key}) - Returning: {value})")
     return {"value": value}
+
+
+@app.delete("/delete/{key}")
+async def remove_key(kv: KV):
+    value = await redis.delete(kv.key)
+    logging.warning(f"DELETE - ({kv.key})")
+    return {"deleted": value}
 
 
 @app.on_event("shutdown")
