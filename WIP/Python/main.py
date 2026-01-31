@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 from redis.asyncio import Redis
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from deps import get_db
 import os
 import logging
 import uuid

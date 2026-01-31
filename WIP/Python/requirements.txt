@@ -3,3 +3,5 @@ redis
 pydantic
 python-dotenv
 pathlib
+sqlalchemy
+asyncpg
