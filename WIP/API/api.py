@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from redis.asyncio import Redis
 from pydantic import BaseModel
+from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 redis_server = os.getenv("REDIS_HOST")
-redis_port = os.getenv("REDDIS_PORT")
+redis_port = os.getenv("REDIS_PORT")
 
 app = FastAPI()
 
@@ -32,6 +35,7 @@ async def root():
 async def set_key(kv: KV):
     await redis.set(kv.key, kv.value)
     return {"ok": True}
+
 
 @app.get("/get/{key}")
 async def get_key(kv: KV):
