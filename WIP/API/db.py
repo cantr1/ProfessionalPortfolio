@@ -52,4 +52,17 @@ async def complete_task_db(db: AsyncSession, task_id: str, output_value: str):
     task.output = output_value
     task.status = "completed"
     await db.commit()
+    await db.refresh(task)
+    return task
+
+
+async def fail_task_db(db: AsyncSession, task_id: str):
+    task = await get_task_db(db, task_id)
+    if not task:
+        return None
+
+    task.output = "null"
+    task.status = "failed"
+    await db.commit()
+    await db.refresh(task)
     return task

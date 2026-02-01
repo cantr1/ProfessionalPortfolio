@@ -1,10 +1,11 @@
-from fastapi import FastAPI, Depends
+from db import create_task_db, complete_task_db, init_db, engine, get_task_db, fail_task_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import FastAPI, Depends
 from redis.asyncio import Redis
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from typing import Dict, Any
 from deps import get_db
-from db import create_task_db, complete_task_db, init_db, engine, get_task_db
 import os
 import logging
 import uuid
@@ -35,7 +36,7 @@ class TaskCreate(BaseModel):
 
 class TaskComplete(BaseModel):
     task_id: str
-    output: str
+    output: Dict[str, Any]
 
 
 @app.on_event("startup")
@@ -96,6 +97,11 @@ async def get_data(task_id: str, db: AsyncSession = Depends(get_db)):
 
 @app.post("/complete_task")
 async def complete_task(kv: TaskComplete, db: AsyncSession = Depends(get_db)):
+    # Check for failure
+    if "failed" in kv.output['test_status']:
+        logger.warning(f"Task failed: {kv.task_id}")
+        await fail_task_db(db, kv.task_id)
+        return {"message": "Task marked as failed"}
     logging.info(f"Task reported complete: (ID#: {kv.task_id})")
     logger.info("Updating SQL database with completed task")
     await complete_task_db(db, kv.task_id, kv.output)
