@@ -98,7 +98,8 @@ async def get_data(task_id: str, db: AsyncSession = Depends(get_db)):
 @app.post("/complete_task")
 async def complete_task(kv: TaskComplete, db: AsyncSession = Depends(get_db)):
     # Check for failure
-    if "failed" in kv.output['test_status']:
+    status = kv.output.get("test_status")
+    if status == "failed":
         logger.warning(f"Task failed: {kv.task_id}")
         await fail_task_db(db, kv.task_id)
         return {"message": "Task marked as failed"}

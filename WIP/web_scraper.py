@@ -13,7 +13,7 @@ def get_task(server: str) -> dict:
     print(f"Recieved Payload ({payload})")
 
     if "id" not in payload:
-        raise RuntimeError(f"No task returned: {payload}")
+        return
 
     task_id = payload['id']
     url = payload['value']
