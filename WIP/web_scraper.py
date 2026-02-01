@@ -1,6 +1,7 @@
-import requests
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
+import requests
+import time
 import os
 
 
@@ -22,7 +23,7 @@ def get_task(server: str) -> dict:
     }
 
 
-def scrape_webpage(url: str) -> dict:
+def scrape_webpage(url: str) -> dict | None:
     print(f"Processing Webpage [{url}]")
     try:
         response = requests.get(url)
@@ -62,11 +63,15 @@ def main():
     api_port = os.getenv("API_PORT")
     server = f"http://{server_ip}:{api_port}"
 
-    task = get_task(server)
+    for _ in range(10_000_000):  # effectively forever
+        task = get_task(server)
 
-    data = scrape_webpage(task['task'])
+        if not task:
+            time.sleep(2)  # nothing to do
+            continue
 
-    complete_task(server, task['task_id'], data)
+        data = scrape_webpage(task["task"])
+        complete_task(server, task["task_id"], data)
 
 
 if __name__ == "__main__":
