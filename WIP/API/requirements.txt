@@ -1,0 +1,7 @@
+fastapi[standard]
+redis
+pydantic
+python-dotenv
+pathlib
+sqlalchemy
+asyncpg
