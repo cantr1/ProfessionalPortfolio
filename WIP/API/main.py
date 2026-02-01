@@ -1,4 +1,5 @@
-from db import create_task_db, complete_task_db, init_db, engine, get_task_db, fail_task_db
+from db import create_task_db, complete_task_db, init_db
+from db import get_task_db, fail_task_db, engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import FastAPI, Depends
 from redis.asyncio import Redis
