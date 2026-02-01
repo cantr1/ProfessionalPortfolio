@@ -5,3 +5,5 @@ python-dotenv
 pathlib
 sqlalchemy
 asyncpg
+requests
+beautifulsoup4
