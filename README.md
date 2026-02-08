@@ -58,25 +58,6 @@ This project demonstrates my ability to build distributed systems, not just APIs
 
 ---
 
-## 🛠️ Roadmap (Coming Soon)  
-
-Here’s what I’ll be adding next:  
-
-- 🐳 **Docker / Kubernetes**: Containers, orchestration & scaling   
-
----
-
-## 🎯 Goals  
-
-- ✅ Build high quality projects that show breadth & depth in DevOps  
-- ✅ Document each project clearly 📖  
-- ✅ Containerize where possible for easy testing 🐋  
-
-This portfolio is an evolving space — stay tuned for more! ✨  
-
----
-
 ## 💡 Notes  
 
-- Each project will include **code**, **docs**, and (where possible) **containerized deployments**.  
-- Suggestions & feedback are always welcome 🙌  
+- Each project will include **code**, **docs**, and (where possible) **containerized deployments**.   
