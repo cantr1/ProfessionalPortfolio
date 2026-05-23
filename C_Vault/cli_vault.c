@@ -16,7 +16,7 @@
 #elif __has_include("/opt/homebrew/include/cjson/cJSON.h")
 #include "/opt/homebrew/include/cjson/cJSON.h"
 #else
-#error "cJSON header not found. Install cJSON or add include path."
+#error "cJSON header not found. Install libcjson-dev (or equivalent) and configure include paths."
 #endif
 
 #define MAX_PATH_LEN 300
@@ -34,7 +34,7 @@ typedef struct {
 bool validate_entry(const t_entry *entry);
 void generate_file_path(const t_entry *entry, char *buffer, size_t size);
 int create_vault_entry(t_entry *entry);
-int read_vault_entry(const t_entry *entry);
+int read_vault_entry(const t_entry *entry, char *response_json, size_t response_json_size);
 int update_vault_entry(const t_entry *entry);
 int delete_vault_entry(const t_entry *entry);
 
@@ -75,7 +75,6 @@ static bool get_json_string_field(cJSON *json, const char *key, char **dest, boo
 static bool populate_entry_from_json(cJSON *json, t_entry *entry) {
     char *method = NULL;
     char *action = NULL;
-
     // Validate data from JSON before populating
     if (!get_json_string_field(json, "entry_name", &entry->entry_name, true)) {
         return false;
@@ -110,17 +109,19 @@ static bool populate_entry_from_json(cJSON *json, t_entry *entry) {
     return true;
 }
 
-static int process_json_payload(const char *json_payload) {
+static int process_json_payload(const char *json_payload, char *response_body, size_t response_body_size) {
     int rc = 1;
 
     if (json_payload == NULL) {
         printf("No JSON payload provided\n");
+        snprintf(response_body, response_body_size, "{\"status\":\"failure\"}");
         return rc;
     }
 
     cJSON *json = cJSON_Parse(json_payload);
     if (json == NULL) {
         printf("Error parsing JSON\n");
+        snprintf(response_body, response_body_size, "{\"status\":\"failure\"}");
         return rc;
     }
 
@@ -136,7 +137,7 @@ static int process_json_payload(const char *json_payload) {
             rc = create_vault_entry(&entry);
             break;
         case 'R':
-            rc = read_vault_entry(&entry);
+            rc = read_vault_entry(&entry, response_body, response_body_size);
             break;
         case 'U':
             rc = update_vault_entry(&entry);
@@ -149,6 +150,14 @@ static int process_json_payload(const char *json_payload) {
         }
     } else {
         printf("Invalid entry\n");
+    }
+
+    if (entry.action != 'R') {
+        if (rc == 0) {
+            snprintf(response_body, response_body_size, "{\"status\":\"success\"}");
+        } else {
+            snprintf(response_body, response_body_size, "{\"status\":\"failure\"}");
+        }
     }
 
     cJSON_Delete(json);
@@ -192,7 +201,7 @@ int create_vault_entry(t_entry *entry) {
         fprintf(fptr, "Username: %s\nPassword: %s", entry->entry_username, entry->entry_pw);
         fclose(fptr);
 
-        printf("Wrote the follwoing to %s\n", file_path);
+        printf("Wrote the following to %s\n", file_path);
         printf("Entry Username: %s\n", entry->entry_username);
         printf("Entry Value: %s\n", entry->entry_pw);
         rc = 0;
@@ -203,34 +212,63 @@ int create_vault_entry(t_entry *entry) {
     return rc;
 }
 
-int read_vault_entry (const t_entry *entry) {
+int read_vault_entry (const t_entry *entry, char *response_json, size_t response_json_size) {
     int rc = 1;
     char file_path[MAX_PATH_LEN];
+    char username[256] = {0};
+    char password[256] = {0};
 
     generate_file_path(entry, file_path, sizeof(file_path));
 
     if (access(file_path, F_OK) != 0) {
         printf("File not found --- Unable to update\n");
+        snprintf(response_json, response_json_size, "{\"status\":\"failure\"}");
         return rc;
     }
 
     FILE *fptr = fopen(file_path, "r");
 
     if (fptr != NULL) {
-        // Store content
-        char file_content[100];
+        char file_content[256];
 
-        // Read and print
-        while(fgets(file_content, 100, fptr)) {
-            printf("%s", file_content);
+        while (fgets(file_content, sizeof(file_content), fptr)) {
+            if (strncmp(file_content, "Username: ", 10) == 0) {
+                strncpy(username, file_content + 10, sizeof(username) - 1);
+                username[strcspn(username, "\r\n")] = '\0';
+            } else if (strncmp(file_content, "Password: ", 10) == 0) {
+                strncpy(password, file_content + 10, sizeof(password) - 1);
+                password[strcspn(password, "\r\n")] = '\0';
+            }
         }
 
         fclose(fptr);
 
-        printf("\nFile read complete\n");
-        rc = 0;
+        cJSON *response = cJSON_CreateObject();
+        if (response == NULL) {
+            printf("Unable to allocate JSON response\n");
+            snprintf(response_json, response_json_size, "{\"status\":\"failure\"}");
+            return rc;
+        }
+
+        cJSON_AddStringToObject(response, "status", "success");
+        cJSON_AddStringToObject(response, "entry_name", entry->entry_name);
+        cJSON_AddStringToObject(response, "entry_username", username);
+        cJSON_AddStringToObject(response, "entry_pw", password);
+
+        char *serialized = cJSON_PrintUnformatted(response);
+        if (serialized != NULL) {
+            snprintf(response_json, response_json_size, "%s", serialized);
+            free(serialized);
+            rc = 0;
+        } else {
+            printf("Unable to serialize JSON response\n");
+            snprintf(response_json, response_json_size, "{\"status\":\"failure\"}");
+        }
+
+        cJSON_Delete(response);
     } else {
         printf("Unable to read from file.");
+        snprintf(response_json, response_json_size, "{\"status\":\"failure\"}");
     }
 
     return rc;
@@ -284,6 +322,7 @@ int delete_vault_entry(const t_entry *entry) {
 
 int main(int argc, char *argv[]) {
     char json_buffer[MAX_JSON_LEN] = {0};
+    char response_body[BUFFER_SIZE] = {0};
 
     int server_fd;
     struct sockaddr_in address;
@@ -330,22 +369,29 @@ int main(int argc, char *argv[]) {
 
             if (json_body != NULL) {
                 json_body += 4;
-                int rc = process_json_payload(json_body);
+                int rc = process_json_payload(json_body, response_body, sizeof(response_body));
 
                 const char *response;
+                char http_response[BUFFER_SIZE + 256] = {0};
 
                 if (rc == 0) {
-                    response =
+                    snprintf(http_response, sizeof(http_response),
                         "HTTP/1.1 200 OK\r\n"
-                        "Content-Type: text/plain\r\n"
+                        "Content-Type: application/json\r\n"
+                        "Content-Length: %zu\r\n"
                         "\r\n"
-                        "Success\n";
+                        "%s",
+                        strlen(response_body), response_body);
+                    response = http_response;
                 } else {
-                    response =
+                    snprintf(http_response, sizeof(http_response),
                         "HTTP/1.1 400 Bad Request\r\n"
-                        "Content-Type: text/plain\r\n"
+                        "Content-Type: application/json\r\n"
+                        "Content-Length: %zu\r\n"
                         "\r\n"
-                        "Failure\n";
+                        "%s",
+                        strlen(response_body), response_body);
+                    response = http_response;
 
                 }
                 write(client_fd, response, strlen(response));
@@ -354,5 +400,5 @@ int main(int argc, char *argv[]) {
         close(client_fd);
     }
 
-    return process_json_payload(json_buffer);
+    return process_json_payload(json_buffer, response_body, sizeof(response_body));
 }
