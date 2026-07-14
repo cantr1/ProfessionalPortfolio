@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitByte - Meditation</title>
+    <link rel="stylesheet" href="/web/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/web/">FitByte</a>
+            <div class="topbar-actions">
+                <span class="user-email" data-user-email></span>
+                <a class="button secondary-button" href="/web/">Dashboard</a>
+                <button type="button" class="secondary-button" data-logout>Logout</button>
+            </div>
+        </header>
+
+        <main class="page">
+            <section class="page-header">
+                <h1>Meditation</h1>
+                <p>Create a meditation entry and compare starting and ending heart rate.</p>
+            </section>
+
+            <section class="content-grid">
+                <form id="meditation-form" class="panel">
+                    <h2>New Meditation Session</h2>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="meditation-start">Meditation start</label>
+                            <input id="meditation-start" name="meditation_start" type="datetime-local" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="meditation-end">Meditation end</label>
+                            <input id="meditation-end" name="meditation_end" type="datetime-local" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="starting-hr">Starting HR</label>
+                            <input id="starting-hr" name="starting_hr" type="number" min="40" max="180" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="ending-hr">Ending HR</label>
+                            <input id="ending-hr" name="ending_hr" type="number" min="40" max="180" required>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button type="submit">Save Meditation</button>
+                    </div>
+                    <p id="meditation-message" class="message" aria-live="polite"></p>
+                </form>
+
+                <aside class="latest-card">
+                    <h2>Most Recent Meditation</h2>
+                    <div id="latest-meditation" class="empty-state">Loading meditation data...</div>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <script src="/web/app.js"></script>
+    <script>
+        setupShell();
+
+        const meditationForm = document.querySelector("#meditation-form");
+        const meditationMessage = document.querySelector("#meditation-message");
+        const latestMeditation = document.querySelector("#latest-meditation");
+
+        function renderLatestMeditation(sessions) {
+            const latest = newestByDate(sessions, "meditation_end");
+            if (!latest) {
+                latestMeditation.textContent = "No meditation sessions recorded yet.";
+                return;
+            }
+
+            latestMeditation.classList.remove("empty-state");
+            latestMeditation.innerHTML = `
+                <dl class="metric-list">
+                    <div class="metric-row"><dt class="metric-label">Started</dt><dd class="metric-value">${formatDateTime(latest.meditation_start)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Ended</dt><dd class="metric-value">${formatDateTime(latest.meditation_end)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Starting HR</dt><dd class="metric-value">${latest.starting_hr} bpm</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Ending HR</dt><dd class="metric-value">${latest.ending_hr} bpm</dd></div>
+                </dl>
+            `;
+        }
+
+        async function loadMeditationSessions() {
+            const response = await apiFetch("/api/meditations");
+            if (!response.ok) {
+                latestMeditation.textContent = await response.text();
+                return;
+            }
+
+            const sessions = await response.json();
+            renderLatestMeditation(sessions || []);
+        }
+
+        meditationForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            meditationMessage.className = "message";
+            meditationMessage.textContent = "";
+
+            const formData = new FormData(meditationForm);
+            const payload = {
+                meditation_start: toISOFromDateTimeLocal(formData.get("meditation_start")),
+                meditation_end: toISOFromDateTimeLocal(formData.get("meditation_end")),
+                starting_hr: Number(formData.get("starting_hr")),
+                ending_hr: Number(formData.get("ending_hr")),
+            };
+
+            const response = await apiFetch("/api/meditations", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                meditationMessage.textContent = await response.text();
+                return;
+            }
+
+            meditationForm.reset();
+            meditationMessage.className = "message success";
+            meditationMessage.textContent = "Meditation session saved.";
+            await loadMeditationSessions();
+        });
+
+        loadMeditationSessions();
+    </script>
+</body>
+</html>

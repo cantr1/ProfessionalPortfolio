@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitByte - Exercise</title>
+    <link rel="stylesheet" href="/web/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/web/">FitByte</a>
+            <div class="topbar-actions">
+                <span class="user-email" data-user-email></span>
+                <a class="button secondary-button" href="/web/">Dashboard</a>
+                <button type="button" class="secondary-button" data-logout>Logout</button>
+            </div>
+        </header>
+
+        <main class="page">
+            <section class="page-header">
+                <h1>Exercise</h1>
+                <p>Create a workout entry and review the most recent training session.</p>
+            </section>
+
+            <section class="content-grid">
+                <form id="exercise-form" class="panel">
+                    <h2>New Exercise Session</h2>
+                    <div class="form-grid">
+                        <div class="form-field full">
+                            <label for="workout-name">Workout name</label>
+                            <input id="workout-name" name="workout_name" type="text" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="workout-start">Workout start</label>
+                            <input id="workout-start" name="workout_start" type="datetime-local" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="workout-end">Workout end</label>
+                            <input id="workout-end" name="workout_end" type="datetime-local" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="zone1-mins">Zone 1 minutes</label>
+                            <input id="zone1-mins" name="zone1_mins" type="number" min="0" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="zone2-mins">Zone 2 minutes</label>
+                            <input id="zone2-mins" name="zone2_mins" type="number" min="0" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="zone3-mins">Zone 3 minutes</label>
+                            <input id="zone3-mins" name="zone3_mins" type="number" min="0" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="strain">Strain</label>
+                            <input id="strain" name="strain" type="number" min="0" max="10" required>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button type="submit">Save Exercise</button>
+                    </div>
+                    <p id="exercise-message" class="message" aria-live="polite"></p>
+                </form>
+
+                <aside class="latest-card">
+                    <h2>Most Recent Exercise</h2>
+                    <div id="latest-exercise" class="empty-state">Loading exercise data...</div>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <script src="/web/app.js"></script>
+    <script>
+        setupShell();
+
+        const exerciseForm = document.querySelector("#exercise-form");
+        const exerciseMessage = document.querySelector("#exercise-message");
+        const latestExercise = document.querySelector("#latest-exercise");
+
+        function renderLatestExercise(sessions) {
+            const latest = newestByDate(sessions, "workout_end");
+            if (!latest) {
+                latestExercise.textContent = "No exercise sessions recorded yet.";
+                return;
+            }
+
+            latestExercise.classList.remove("empty-state");
+            latestExercise.innerHTML = `
+                <dl class="metric-list">
+                    <div class="metric-row"><dt class="metric-label">Workout</dt><dd class="metric-value">${escapeHTML(latest.workout_name)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Started</dt><dd class="metric-value">${formatDateTime(latest.workout_start)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Ended</dt><dd class="metric-value">${formatDateTime(latest.workout_end)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Zone 1</dt><dd class="metric-value">${latest.zone1_mins} min</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Zone 2</dt><dd class="metric-value">${latest.zone2_mins} min</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Zone 3</dt><dd class="metric-value">${latest.zone3_mins} min</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Strain</dt><dd class="metric-value">${latest.strain}/10</dd></div>
+                </dl>
+            `;
+        }
+
+        async function loadExerciseSessions() {
+            const response = await apiFetch("/api/exercises");
+            if (!response.ok) {
+                latestExercise.textContent = await response.text();
+                return;
+            }
+
+            const sessions = await response.json();
+            renderLatestExercise(sessions || []);
+        }
+
+        exerciseForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            exerciseMessage.className = "message";
+            exerciseMessage.textContent = "";
+
+            const formData = new FormData(exerciseForm);
+            const payload = {
+                workout_name: formData.get("workout_name"),
+                workout_start: toISOFromDateTimeLocal(formData.get("workout_start")),
+                workout_end: toISOFromDateTimeLocal(formData.get("workout_end")),
+                zone1_mins: Number(formData.get("zone1_mins")),
+                zone2_mins: Number(formData.get("zone2_mins")),
+                zone3_mins: Number(formData.get("zone3_mins")),
+                strain: Number(formData.get("strain")),
+            };
+
+            const response = await apiFetch("/api/exercises", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                exerciseMessage.textContent = await response.text();
+                return;
+            }
+
+            exerciseForm.reset();
+            exerciseMessage.className = "message success";
+            exerciseMessage.textContent = "Exercise session saved.";
+            await loadExerciseSessions();
+        });
+
+        loadExerciseSessions();
+    </script>
+</body>
+</html>

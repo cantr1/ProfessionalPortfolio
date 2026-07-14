@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitByte - Dashboard</title>
+    <link rel="stylesheet" href="/web/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/web/">FitByte</a>
+            <div class="topbar-actions">
+                <span class="user-email" data-user-email></span>
+                <button type="button" class="secondary-button" data-logout>Logout</button>
+            </div>
+        </header>
+
+        <main class="page">
+            <section class="page-header">
+                <h1>Health Dashboard</h1>
+                <p>Recent training, recovery, and mindfulness signals in one view.</p>
+            </section>
+
+            <section class="dashboard-grid" aria-label="Recent session charts">
+                <article class="chart-card">
+                    <h2>Latest Exercise</h2>
+                    <p id="exercise-subtitle" class="card-subtitle">Loading exercise data...</p>
+                    <div id="exercise-chart" class="chart-bars"></div>
+                </article>
+
+                <article class="chart-card">
+                    <h2>Latest Meditation</h2>
+                    <p id="meditation-subtitle" class="card-subtitle">Loading meditation data...</p>
+                    <div id="meditation-chart" class="chart-bars"></div>
+                </article>
+
+                <article class="chart-card">
+                    <h2>Latest Sleep</h2>
+                    <p id="sleep-subtitle" class="card-subtitle">Loading sleep data...</p>
+                    <div id="sleep-chart"></div>
+                </article>
+            </section>
+
+            <section class="option-grid" aria-label="Tracking options">
+                <a class="option-card" href="/web/exercise.html">
+                    <h2>Exercise</h2>
+                    <p>Log workouts, heart-rate zone minutes, and strain for each training session.</p>
+                    <span>Open exercise</span>
+                </a>
+
+                <a class="option-card" href="/web/meditation.html">
+                    <h2>Meditation</h2>
+                    <p>Capture meditation start/end times and heart-rate changes across the session.</p>
+                    <span>Open meditation</span>
+                </a>
+
+                <a class="option-card" href="/web/sleep.html">
+                    <h2>Sleep</h2>
+                    <p>Record sleep windows and time spent in REM, light, and deep sleep.</p>
+                    <span>Open sleep</span>
+                </a>
+            </section>
+        </main>
+    </div>
+
+    <script src="/web/app.js"></script>
+    <script>
+        setupShell();
+
+        function percent(value, max) {
+            if (!max) {
+                return 0;
+            }
+            return Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+        }
+
+        function renderBarRows(target, rows) {
+            target.innerHTML = rows.map((row) => `
+                <div class="bar-row">
+                    <span class="bar-label">${row.label}</span>
+                    <span class="bar-track"><span class="bar-fill" style="--value: ${row.percent}%"></span></span>
+                    <span class="bar-value">${row.value}</span>
+                </div>
+            `).join("");
+        }
+
+        function renderEmpty(subtitleElement, chartElement, message) {
+            subtitleElement.textContent = message;
+            chartElement.innerHTML = "";
+            chartElement.className = "empty-state";
+        }
+
+        async function loadLatestExercise() {
+            const subtitle = document.querySelector("#exercise-subtitle");
+            const chart = document.querySelector("#exercise-chart");
+            const response = await apiFetch("/api/exercises");
+
+            if (!response.ok) {
+                renderEmpty(subtitle, chart, await response.text());
+                return;
+            }
+
+            const sessions = await response.json();
+            const latest = newestByDate(sessions || [], "workout_end");
+            if (!latest) {
+                renderEmpty(subtitle, chart, "No exercise sessions recorded yet.");
+                return;
+            }
+
+            chart.className = "chart-bars";
+            subtitle.textContent = `${latest.workout_name} · ${formatDateTime(latest.workout_end)}`;
+            const maxZone = Math.max(latest.zone1_mins, latest.zone2_mins, latest.zone3_mins, 1);
+            renderBarRows(chart, [
+                { label: "Zone 1", value: `${latest.zone1_mins}m`, percent: percent(latest.zone1_mins, maxZone) },
+                { label: "Zone 2", value: `${latest.zone2_mins}m`, percent: percent(latest.zone2_mins, maxZone) },
+                { label: "Zone 3", value: `${latest.zone3_mins}m`, percent: percent(latest.zone3_mins, maxZone) },
+                { label: "Strain", value: `${latest.strain}/10`, percent: percent(latest.strain, 10) },
+            ]);
+        }
+
+        async function loadLatestMeditation() {
+            const subtitle = document.querySelector("#meditation-subtitle");
+            const chart = document.querySelector("#meditation-chart");
+            const response = await apiFetch("/api/meditations");
+
+            if (!response.ok) {
+                renderEmpty(subtitle, chart, await response.text());
+                return;
+            }
+
+            const sessions = await response.json();
+            const latest = newestByDate(sessions || [], "meditation_end");
+            if (!latest) {
+                renderEmpty(subtitle, chart, "No meditation sessions recorded yet.");
+                return;
+            }
+
+            chart.className = "chart-bars";
+            const change = latest.ending_hr - latest.starting_hr;
+            const changeLabel = change > 0 ? `+${change}` : `${change}`;
+            subtitle.textContent = `${formatDateTime(latest.meditation_end)} · HR change ${changeLabel} bpm`;
+            renderBarRows(chart, [
+                { label: "Start HR", value: `${latest.starting_hr}`, percent: percent(latest.starting_hr, 180) },
+                { label: "End HR", value: `${latest.ending_hr}`, percent: percent(latest.ending_hr, 180) },
+            ]);
+        }
+
+        async function loadLatestSleep() {
+            const subtitle = document.querySelector("#sleep-subtitle");
+            const chart = document.querySelector("#sleep-chart");
+            const response = await apiFetch("/api/sleeps");
+
+            if (!response.ok) {
+                renderEmpty(subtitle, chart, await response.text());
+                return;
+            }
+
+            const sessions = await response.json();
+            const latest = newestByDate(sessions || [], "sleep_end");
+            if (!latest) {
+                renderEmpty(subtitle, chart, "No sleep sessions recorded yet.");
+                return;
+            }
+
+            chart.className = "";
+            const rem = latest.rem_duration_mins;
+            const light = latest.light_duration_mins;
+            const deep = latest.deep_duration_mins;
+            const total = rem + light + deep;
+
+            subtitle.textContent = `${formatDateTime(latest.sleep_end)} · ${total} tracked minutes`;
+            chart.innerHTML = `
+                <div class="stacked-bar" aria-label="Sleep stage distribution">
+                    <span class="stack-segment stack-rem" style="--value: ${percent(rem, total)}%"></span>
+                    <span class="stack-segment stack-light" style="--value: ${percent(light, total)}%"></span>
+                    <span class="stack-segment stack-deep" style="--value: ${percent(deep, total)}%"></span>
+                </div>
+                <div class="legend">
+                    <span class="legend-item"><span class="legend-swatch" style="--color: #2449eb"></span>REM ${rem}m</span>
+                    <span class="legend-item"><span class="legend-swatch" style="--color: #4ba262"></span>Light ${light}m</span>
+                    <span class="legend-item"><span class="legend-swatch" style="--color: #111827"></span>Deep ${deep}m</span>
+                </div>
+                <p class="summary-number">${total} min</p>
+            `;
+        }
+
+        loadLatestExercise();
+        loadLatestMeditation();
+        loadLatestSleep();
+    </script>
+</body>
+</html>

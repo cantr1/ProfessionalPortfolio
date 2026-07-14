@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitByte - Sleep</title>
+    <link rel="stylesheet" href="/web/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/web/">FitByte</a>
+            <div class="topbar-actions">
+                <span class="user-email" data-user-email></span>
+                <a class="button secondary-button" href="/web/">Dashboard</a>
+                <button type="button" class="secondary-button" data-logout>Logout</button>
+            </div>
+        </header>
+
+        <main class="page">
+            <section class="page-header">
+                <h1>Sleep</h1>
+                <p>Create a sleep entry and review your most recent recorded session.</p>
+            </section>
+
+            <section class="content-grid">
+                <form id="sleep-form" class="panel">
+                    <h2>New Sleep Session</h2>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="sleep-start">Sleep start</label>
+                            <input id="sleep-start" name="sleep_start" type="datetime-local" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="sleep-end">Sleep end</label>
+                            <input id="sleep-end" name="sleep_end" type="datetime-local" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="rem-duration">REM minutes</label>
+                            <input id="rem-duration" name="rem_duration_mins" type="number" min="0" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="light-duration">Light minutes</label>
+                            <input id="light-duration" name="light_duration_mins" type="number" min="0" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="deep-duration">Deep minutes</label>
+                            <input id="deep-duration" name="deep_duration_mins" type="number" min="0" required>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button type="submit">Save Sleep</button>
+                    </div>
+                    <p id="sleep-message" class="message" aria-live="polite"></p>
+                </form>
+
+                <aside class="latest-card">
+                    <h2>Most Recent Sleep</h2>
+                    <div id="latest-sleep" class="empty-state">Loading sleep data...</div>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <script src="/web/app.js"></script>
+    <script>
+        setupShell();
+
+        const sleepForm = document.querySelector("#sleep-form");
+        const sleepMessage = document.querySelector("#sleep-message");
+        const latestSleep = document.querySelector("#latest-sleep");
+
+        function renderLatestSleep(sessions) {
+            const latest = newestByDate(sessions, "sleep_end");
+            if (!latest) {
+                latestSleep.textContent = "No sleep sessions recorded yet.";
+                return;
+            }
+
+            latestSleep.classList.remove("empty-state");
+            latestSleep.innerHTML = `
+                <dl class="metric-list">
+                    <div class="metric-row"><dt class="metric-label">Started</dt><dd class="metric-value">${formatDateTime(latest.sleep_start)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Ended</dt><dd class="metric-value">${formatDateTime(latest.sleep_end)}</dd></div>
+                    <div class="metric-row"><dt class="metric-label">REM</dt><dd class="metric-value">${latest.rem_duration_mins} min</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Light</dt><dd class="metric-value">${latest.light_duration_mins} min</dd></div>
+                    <div class="metric-row"><dt class="metric-label">Deep</dt><dd class="metric-value">${latest.deep_duration_mins} min</dd></div>
+                </dl>
+            `;
+        }
+
+        async function loadSleepSessions() {
+            const response = await apiFetch("/api/sleeps");
+            if (!response.ok) {
+                latestSleep.textContent = await response.text();
+                return;
+            }
+
+            const sessions = await response.json();
+            renderLatestSleep(sessions || []);
+        }
+
+        sleepForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            sleepMessage.className = "message";
+            sleepMessage.textContent = "";
+
+            const formData = new FormData(sleepForm);
+            const payload = {
+                sleep_start: toISOFromDateTimeLocal(formData.get("sleep_start")),
+                sleep_end: toISOFromDateTimeLocal(formData.get("sleep_end")),
+                rem_duration_mins: Number(formData.get("rem_duration_mins")),
+                light_duration_mins: Number(formData.get("light_duration_mins")),
+                deep_duration_mins: Number(formData.get("deep_duration_mins")),
+            };
+
+            const response = await apiFetch("/api/sleeps", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                sleepMessage.textContent = await response.text();
+                return;
+            }
+
+            sleepForm.reset();
+            sleepMessage.className = "message success";
+            sleepMessage.textContent = "Sleep session saved.";
+            await loadSleepSessions();
+        });
+
+        loadSleepSessions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+# All keys in this file are DEV keys and will not work in prod
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJmaXRuZXNzLWFjY2VzcyIsInN1YiI6ImYzMjFkZWUzLWQ5NmItNDhmNC1hM2MxLTg2MjhhNDgzOWVmNCIsImV4cCI6MTc4Mzk4ODU4OSwiaWF0IjoxNzgzOTg0OTg5fQ.LHr64gYv4RTIMk9XfShRfrUNYiVa8efeRJij82iIUBM
+@refreshToken = 8ee578a675ca77e76943a1b3d4da344c33b0d138d9b808c679f987a7a05e9f71
+@userCreationToken = RUaD6gbtjMqq93/G4897GO/PZuMPQUOwAVCuDXvA3H0=
+@adminKey = 03c0c0f5818e0a8372d02620dc256ca0a6bee8375d23e1496c4a3583560692b5
+###
+GET http://localhost:8080/api/healthy
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+Authorization: Bearer {{userCreationToken}}
+
+{
+    "email": "kcantrell@gmail.com",
+    "password": "kelzho"
+}
+
+###
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+    "email": "kcantrell@gmail.com",
+    "password": "kelzho"
+}
+
+###
+POST http://localhost:8080/api/refresh
+Content-Type: application/json
+Authorization: Bearer {{refreshToken}}
+
+
+###
+POST http://localhost:8080/api/sleeps
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "sleep_start": "2026-07-11T22:30:00Z",
+    "sleep_end": "2026-07-12T06:45:00Z",
+    "rem_duration_mins": 105,
+    "light_duration_mins": 265,
+    "deep_duration_mins": 125
+}
+
+###
+POST http://localhost:8080/api/sleeps
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "sleep_start": "2026-07-11T22:30:00Z",
+    "sleep_end": "2026-07-12T06:45:00Z",
+    "rem_duration_mins": 105,
+    "light_duration_mins": 265
+}
+
+###
+GET http://localhost:8080/api/sleeps
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+POST http://localhost:8080/api/meditations
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "meditation_start": "2026-07-12T13:00:00Z",
+    "meditation_end": "2026-07-12T13:20:00Z",
+    "starting_hr": 78,
+    "ending_hr": 62
+}
+
+###
+POST http://localhost:8080/api/meditations
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "meditation_start": "2026-07-12T13:00:00Z",
+    "meditation_end": "2026-07-12T13:20:00Z",
+    "starting_hr": 78
+}
+
+###
+GET http://localhost:8080/api/meditations
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
+POST http://localhost:8080/api/exercises
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "workout_start": "2026-07-12T15:00:00Z",
+    "workout_end": "2026-07-12T15:45:00Z",
+    "workout_name": "Zone 2 Run",
+    "zone1_mins": 5,
+    "zone2_mins": 35,
+    "zone3_mins": 5,
+    "strain": 6
+}
+
+###
+POST http://localhost:8080/api/exercises
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "workout_start": "2026-07-12T15:00:00Z",
+    "workout_end": "2026-07-12T15:45:00Z",
+    "zone1_mins": 5,
+    "zone2_mins": 35,
+    "zone3_mins": 5,
+    "strain": 6
+}
+
+###
+POST http://localhost:8080/api/exercises
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "workout_start": "2026-07-12T15:00:00Z",
+    "workout_end": "2026-07-12T15:45:00Z",
+    "workout_name": "Overcooked Intervals",
+    "zone1_mins": 5,
+    "zone2_mins": 20,
+    "zone3_mins": 20,
+    "strain": 11
+}
+
+###
+POST http://localhost:8080/api/exercises
+Content-Type: application/json
+
+{
+    "workout_start": "2026-07-12T15:00:00Z",
+    "workout_end": "2026-07-12T15:45:00Z",
+    "workout_name": "No Auth Run",
+    "zone1_mins": 5,
+    "zone2_mins": 35,
+    "zone3_mins": 5,
+    "strain": 6
+}
+
+###
+GET http://localhost:8080/api/exercises
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+
+###
+DELETE http://localhost:8080/api/users
+Content-Type: application/json
+Authorization: Bearer {{adminKey}}
+
+
+###
+DELETE http://localhost:8080/api/sleeps
+Content-Type: application/json
+Authorization: Bearer {{adminKey}}
+
+###
+DELETE http://localhost:8080/api/meditations
+Content-Type: application/json
+Authorization: Bearer {{adminKey}}
+
+###
+DELETE http://localhost:8080/api/exercises
+Content-Type: application/json
+Authorization: Bearer {{adminKey}}

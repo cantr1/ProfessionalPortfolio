@@ -1,0 +1,248 @@
+<!doctype html>
+
+<!-- After this, it starts by opening an <html> tag. -->
+<html>
+<head>
+    <meta name="color-scheme" content="light dark">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        FitByte - Login
+    </title>
+
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2449eb 0%, #4ba262 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Login Card Container */
+        .login-container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            color: #333333;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        /* Form Layout */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666666;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cccccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Options Row (Forgot Password / Remember Me) */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #666666;
+        }
+
+        .forgot-pass {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .forgot-pass:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #667eea;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: #5a6fd6;
+        }
+
+        .login-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .login-message {
+            min-height: 1.25rem;
+            margin-top: 1rem;
+            color: #b42318;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Footer Registration Link */
+        .login-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666666;
+        }
+
+        .login-footer a {
+            color: #764ba2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Account Login</h2>
+        
+        <form id="login-form">
+            
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="name@example.com" required>
+            </div>
+            
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+            
+            <!-- Contextual Options -->
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+                <a href="#" class="forgot-pass">Forgot Password?</a>
+            </div>
+            
+            <!-- Submit Action -->
+            <button type="submit" class="login-btn">Sign In</button>
+            <p id="login-message" class="login-message" aria-live="polite"></p>
+            
+        </form>
+
+        <div class="login-footer">
+            Don't have an account? <a href="#">Create one</a>
+        </div>
+    </div>
+    <script>
+        if (localStorage.getItem("accessToken")) {
+            window.location.href = "/web/";
+        }
+
+        const loginForm = document.querySelector("#login-form");
+        const loginMessage = document.querySelector("#login-message");
+        const loginButton = document.querySelector(".login-btn");
+
+        loginForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const email = document.querySelector("#email").value;
+            const password = document.querySelector("#password").value;
+
+            loginMessage.style.color = "#b42318";
+            loginMessage.textContent = "";
+            loginButton.disabled = true;
+            loginButton.textContent = "Signing in...";
+
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    loginMessage.textContent = errorMessage || "Login failed";
+                    return;
+                }
+
+                const data = await response.json();
+
+                localStorage.setItem("accessToken", data.token);
+                localStorage.setItem("refreshToken", data.refresh_token);
+                localStorage.setItem("userEmail", data.email);
+
+                loginMessage.style.color = "#067647";
+                loginMessage.textContent = "Login successful";
+
+                console.log("Logged in user:", data);
+                window.location.href = "/web/";
+            } catch (error) {
+                console.error("Login request failed:", error);
+                loginMessage.textContent = "Unable to reach the server";
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Sign In";
+            }
+        });
+    </script>
+
+</body>
+<!-- that will be closed at the end of the file with </html>. -->
+</html>

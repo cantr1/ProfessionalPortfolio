@@ -18,15 +18,6 @@ Right now, this portfolio is **under construction 🏗️**, but my goal is to b
 
 ## Projects  
 
-### 🪙 **Blockchain Emulator with MQTT Integration**  
-- 🐍 Built in **Python**  
-- 🔗 Simulates a blockchain with transaction & mining features  
-- 📡 Uses **MQTT** for real-time blockchain updates  
-- 💻 CLI app for flexible interaction with the chain  
-- 🐳 Containerized applications
-
-This project blends Python development, messaging systems, and containerization, showing my ability to work across both software and infrastructure layers.  
-
 ### 🔨 **Bash Anvil – Automated Server Deployment with Semaphore**  
 - 🐚 Built with **Bash** for automation and testing  
 - 📦 Integrated with **Semaphore** for CI/CD playbook deployment  
@@ -44,6 +35,14 @@ scripting, orchestration, and security practices into a single workflow.
 - 💻 **Nginx** interface showing status information  
 
 This project highlights my ability to create tools, not just scripts. This is critical in any real DevOps / Engineering environment, as although scripts are a big part of software, tools are what make or break workflows.
+
+### 🔨 **FitByte – Fitness Tracker with Go and PostgreSQL**  
+- 🦫 Built with **Go** using the standard `net/http` package
+- 🗄️ Uses **PostgreSQL**, SQL migrations, and `sqlc` generated database code
+- 🔐 Includes user creation, Argon2id password hashing, JWT access tokens, and refresh tokens
+- 🌐 Serves a static web client for tracking sleep, exercise, and meditation sessions
+
+This project demonstrates my ability to build a full-stack application with persistent data, authentication, and a small browser-based client. It also gave me practice designing backend workflows around tokens, database queries, and authenticated API routes.
 
 ### 🔨 **Task Forge – Distributed Task System with Python API**  
 - 🐍 Built with Python + FastAPI for an async task API
