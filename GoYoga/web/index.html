@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yoga Class Scheduler</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <!-- defer means the browser downloads JS now, but runs it after the HTML is parsed. -->
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="auth-view" class="auth-layout">
+        <div class="brand-panel">
+          <p class="eyebrow">Yoga Studio</p>
+          <h1>Reserve your next class with a calmer calendar.</h1>
+          <p>
+            Sign in to view upcoming sessions, choose a class, and reserve your
+            spot.
+          </p>
+        </div>
+
+        <div class="auth-card">
+          <div class="auth-tabs" role="tablist" aria-label="Authentication">
+            <button id="show-login" class="tab-button active" type="button">
+              Login
+            </button>
+            <button id="show-signup" class="tab-button" type="button">
+              Create Account
+            </button>
+          </div>
+
+          <form id="login-form" class="auth-form">
+            <label>
+              Email
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+            </label>
+            <button type="submit">Login</button>
+          </form>
+
+          <form id="signup-form" class="auth-form hidden">
+            <label>
+              Name
+              <input name="name" type="text" autocomplete="name" required />
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              Password
+              <input
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                required
+              />
+            </label>
+            <button type="submit">Create Account</button>
+          </form>
+
+          <p id="auth-message" class="form-message" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="calendar-view" class="calendar-layout hidden">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Class Calendar</p>
+            <h2>Upcoming Yoga Sessions</h2>
+          </div>
+          <button id="logout-button" class="secondary-button" type="button">
+            Logout
+          </button>
+        </header>
+
+        <div class="calendar-toolbar">
+          <button id="refresh-sessions" class="secondary-button" type="button">
+            Refresh
+          </button>
+          <p id="calendar-message" class="form-message" aria-live="polite"></p>
+        </div>
+
+        <div id="calendar-grid" class="calendar-grid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <dialog id="session-dialog" class="session-dialog">
+      <form method="dialog">
+        <button class="icon-close" value="cancel" aria-label="Close">x</button>
+      </form>
+      <div id="session-dialog-content"></div>
+    </dialog>
+  </body>
+</html>

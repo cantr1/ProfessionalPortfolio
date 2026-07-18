@@ -1,0 +1,137 @@
+@baseUrl = http://localhost:8080
+
+# Replace these with your local .env values.
+@adminKey = replace-with-admin-key
+@instructorCreationToken = replace-with-instructor-creation-token
+
+@instructorEmail = ava.instructor@example.com
+@instructorPassword = password123
+@instructorName = Ava Brooks
+
+@studentEmail = mia.student@example.com
+@studentPassword = password123
+@studentName = Mia Stone
+
+### Health check
+GET {{baseUrl}}/api/health
+
+### Reset dev database
+# Requires IN_DEV=true and ADMIN_KEY.
+POST {{baseUrl}}/api/reset
+Authorization: Bearer {{adminKey}}
+
+### Create instructor
+# @name createInstructor
+POST {{baseUrl}}/api/instructors
+Authorization: Bearer {{instructorCreationToken}}
+Content-Type: application/json
+
+{
+  "email": "{{instructorEmail}}",
+  "password": "{{instructorPassword}}",
+  "name": "{{instructorName}}"
+}
+
+### Login as instructor
+# @name loginInstructor
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{instructorEmail}}",
+  "password": "{{instructorPassword}}"
+}
+
+### Create morning vinyasa session
+# @name createMorningSession
+POST {{baseUrl}}/api/sessions
+Authorization: Bearer {{loginInstructor.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "start_time": "2026-07-20T14:00:00Z",
+  "end_time": "2026-07-20T15:00:00Z",
+  "difficulty": 3,
+  "class_size": 12,
+  "description": "Power yoga"
+}
+
+### Create restorative session
+# @name createRestorativeSession
+POST {{baseUrl}}/api/sessions
+Authorization: Bearer {{loginInstructor.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "start_time": "2026-07-22T23:00:00Z",
+  "end_time": "2026-07-23T00:00:00Z",
+  "difficulty": 2,
+  "class_size": 10,
+  "description": "Restorative flow"
+}
+
+### Create beginner session
+# @name createBeginnerSession
+POST {{baseUrl}}/api/sessions
+Authorization: Bearer {{loginInstructor.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "start_time": "2026-07-24T16:30:00Z",
+  "end_time": "2026-07-24T17:30:00Z",
+  "difficulty": 1,
+  "class_size": 8,
+  "description": "Beginner foundations"
+}
+
+### Create student account
+# @name createStudent
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "email": "{{studentEmail}}",
+  "password": "{{studentPassword}}",
+  "name": "{{studentName}}"
+}
+
+### Login as student
+# @name loginStudent
+POST {{baseUrl}}/api/login
+Content-Type: application/json
+
+{
+  "email": "{{studentEmail}}",
+  "password": "{{studentPassword}}"
+}
+
+### Get all sessions as student
+# @name listSessions
+GET {{baseUrl}}/api/sessions
+Authorization: Bearer {{loginStudent.response.body.$.token}}
+
+### Get one session by ID
+GET {{baseUrl}}/api/sessions/{{createMorningSession.response.body.$.id}}
+Authorization: Bearer {{loginStudent.response.body.$.token}}
+
+### Register student for morning session
+# @name registerForMorningSession
+POST {{baseUrl}}/api/sessions/{{createMorningSession.response.body.$.id}}/registrations
+Authorization: Bearer {{loginStudent.response.body.$.token}}
+
+### Unregister student from morning session
+DELETE {{baseUrl}}/api/sessions/{{createMorningSession.response.body.$.id}}/registrations
+Authorization: Bearer {{loginStudent.response.body.$.token}}
+
+### Refresh student access token
+# @name refreshStudentToken
+POST {{baseUrl}}/api/refresh
+Authorization: Bearer {{loginStudent.response.body.$.refresh_token}}
+
+### Revoke student refresh token
+POST {{baseUrl}}/api/revoke
+Authorization: Bearer {{loginStudent.response.body.$.refresh_token}}
+
+### Metrics
+GET {{baseUrl}}/api/metrics
+Authorization: Bearer {{adminKey}}
