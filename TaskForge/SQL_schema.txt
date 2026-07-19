@@ -1,8 +1,0 @@
-tasks
------
-id           UUID (PK)
-payload      TEXT
-result       TEXT
-status       TEXT
-created_at   TIMESTAMP
-completed_at TIMESTAMP
